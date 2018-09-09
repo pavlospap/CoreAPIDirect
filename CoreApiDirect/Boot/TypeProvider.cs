@@ -27,7 +27,7 @@ namespace CoreApiDirect.Boot
 
         private void GetAllTypesFromCurrentLocation()
         {
-            string location = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string location = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
 
             foreach (string file in Directory.GetFiles(location, "*.dll", SearchOption.AllDirectories))
             {
