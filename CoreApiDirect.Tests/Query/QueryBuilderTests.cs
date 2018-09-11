@@ -12,6 +12,7 @@ using CoreApiDirect.Query.Operators;
 using CoreApiDirect.Query.Parameters;
 using CoreApiDirect.Repositories;
 using CoreApiDirect.Tests.DataContext;
+using CoreApiDirect.Tests.Query.Helpers;
 using CoreApiDirect.Url;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,6 +22,21 @@ namespace CoreApiDirect.Tests.Query
 {
     public class QueryBuilderTests
     {
+        [Fact]
+        public void Build_SearchKeyOnNonStringProperty_ExceptionThrown()
+        {
+            var invalidEntitiesRepository = new Repository<InvalidEntity, int, AppDbContextTests>(AppDbContextTests.GetContextWithData());
+            var builder = GetQueryBuilder<InvalidEntity>(new ServiceCollection());
+
+            Assert.Throws<InvalidOperationException>(() => builder.Build(invalidEntitiesRepository.Query, new QueryString(new CoreOptions())
+            {
+                QueryParams = new QueryParams
+                {
+                    Search = "anything"
+                }
+            }));
+        }
+
         [Fact]
         public async Task Build_ValidData_EqualToExpected()
         {
@@ -86,12 +102,7 @@ namespace CoreApiDirect.Tests.Query
 
             var expectedData = await expectedDataQuery.ToListAsync();
 
-            var walker = new QueryPropertyWalker<School>(new PropertyProvider());
-            var visitor = new QueryPropertyWalkerVisitor<School>(
-                GetServices().BuildServiceProvider(),
-                new PropertyProvider(),
-                new MethodProvider());
-            var builder = new QueryBuilder<School>(walker, visitor);
+            var builder = GetQueryBuilder<School>(GetServices());
 
             var builtDataQuery = builder.Build(schoolsRepository.Query, new QueryString(new CoreOptions())
             {
@@ -260,11 +271,19 @@ namespace CoreApiDirect.Tests.Query
             Assert.Equal(expectedDataQuery.ToJson(), builtDataQuery.ToJson());
         }
 
+        private QueryBuilder<TEntity> GetQueryBuilder<TEntity>(IServiceCollection services)
+        {
+            var walker = new QueryPropertyWalker<TEntity>(new PropertyProvider());
+            var visitor = new QueryPropertyWalkerVisitor<TEntity>(
+                services.BuildServiceProvider(),
+                new PropertyProvider(),
+                new MethodProvider());
+            return new QueryBuilder<TEntity>(walker, visitor);
+        }
+
         private IServiceCollection GetServices()
         {
             var services = new ServiceCollection();
-            services.AddTransient<IQueryPropertyWalker<School>, QueryPropertyWalker<School>>();
-            services.AddTransient<IQueryPropertyWalkerVisitor<School>, QueryPropertyWalkerVisitor<School>>();
             services.AddTransient<IOneToManyQueryDetailPropertyWalker<Lesson>, OneToManyQueryDetailPropertyWalker<Lesson>>();
             services.AddTransient<IOneToManyQueryDetailPropertyWalkerVisitor<Lesson>, OneToManyQueryDetailPropertyWalkerVisitor<Lesson>>();
             services.AddTransient<IOneToManyQueryDetailPropertyWalker<Book>, OneToManyQueryDetailPropertyWalker<Book>>();

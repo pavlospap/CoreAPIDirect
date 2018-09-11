@@ -40,6 +40,11 @@ namespace CoreApiDirect.Query
 
             var searchKeyProperties = _propertyProvider.GetProperties(typeof(TEntity)).Where(p => p.GetCustomAttribute<SearchKeyAttribute>() != null);
 
+            if (searchKeyProperties.Where(p => p.PropertyType != typeof(string)).Any())
+            {
+                throw new InvalidOperationException("CoreApiDirect.Entities.SearchKeyAttribute is added to a non string property.");
+            }
+
             if (!searchKeyProperties.Any())
             {
                 return walkInfo.Query;
