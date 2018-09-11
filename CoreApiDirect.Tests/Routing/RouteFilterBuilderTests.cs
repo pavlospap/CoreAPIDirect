@@ -8,6 +8,7 @@ using CoreApiDirect.Demo.Entities.App;
 using CoreApiDirect.Repositories;
 using CoreApiDirect.Routing;
 using CoreApiDirect.Tests.DataContext;
+using CoreApiDirect.Tests.Routing.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
@@ -16,6 +17,13 @@ namespace CoreApiDirect.Tests.Routing
     public class RouteFilterBuilderTests : RouteTestsBase
     {
         [Fact]
+        public void BuildFilter_MasterObjectPropertyNotExistsInDetail_ExceptionThrown()
+        {
+            var routeFilterBuilder = GetRouteFilterBuilder("masterentityid:1");
+            Assert.Throws<InvalidOperationException>(() => routeFilterBuilder.BuildFilter(typeof(DetailEntityController)));
+        }
+
+        [Fact]
         public void BuildFilter_ValidData_EqualToExpected()
         {
             var repository = new Repository<Phone, int, AppDbContextTests>(AppDbContextTests.GetContextWithData());
@@ -23,8 +31,7 @@ namespace CoreApiDirect.Tests.Routing
             Expression<Func<Phone, bool>> filter = p => p.ContactInfoId == 1 && p.ContactInfo.StudentId == 1 && p.ContactInfo.Student.SchoolId == 1;
             var expectedData = GetData(repository, filter);
 
-            var actionContextAccessor = GetActionContextAccessor("schoolid:1#studentid:1#contactinfoid:1", new ServiceCollection());
-            var routeFilterBuilder = new RouteFilterBuilder(actionContextAccessor, new PropertyProvider(), new MethodProvider());
+            var routeFilterBuilder = GetRouteFilterBuilder("schoolid:1#studentid:1#contactinfoid:1");
             var builtFilter = (Expression<Func<Phone, bool>>)routeFilterBuilder.BuildFilter(typeof(PhonesController));
             var builtData = GetData(repository, builtFilter);
 
@@ -37,6 +44,12 @@ namespace CoreApiDirect.Tests.Routing
                 .Where(p => p.Id.Equals(1))
                 .Where(filter)
                 .ToList();
+        }
+
+        private RouteFilterBuilder GetRouteFilterBuilder(string routeEntityInfo)
+        {
+            var actionContextAccessor = GetActionContextAccessor(routeEntityInfo, new ServiceCollection());
+            return new RouteFilterBuilder(actionContextAccessor, new PropertyProvider(), new MethodProvider());
         }
     }
 }

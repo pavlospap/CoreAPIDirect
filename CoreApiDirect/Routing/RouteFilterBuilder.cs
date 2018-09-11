@@ -69,6 +69,12 @@ namespace CoreApiDirect.Routing
                     Expression.Constant(Convert.ChangeType(_actionContextAccessor.GetRouteParamIgnoreCase(masterIdProperty.Name), masterIdProperty.PropertyType)));
 
                 var masterObjectProperty = detailType.GetProperty(masterType.Name);
+
+                if (masterObjectProperty == null)
+                {
+                    throw new InvalidOperationException($"Type '{detailType.Name}' does not contain a '{masterType.Name}' property.");
+                }
+
                 AppendMemberChain(ref memberChain, masterObjectProperty);
 
                 return relation;
