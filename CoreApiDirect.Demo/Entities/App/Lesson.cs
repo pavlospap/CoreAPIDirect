@@ -5,7 +5,7 @@ using CoreApiDirect.Entities;
 
 namespace CoreApiDirect.Demo.Entities.App
 {
-    public class Lesson : Entity<string>
+    public class Lesson : EntityBase<string>
     {
         [SearchKey]
         [Required]

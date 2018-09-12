@@ -17,10 +17,9 @@ namespace CoreApiDirect.Demo.Minimum
             .AddMvc();
         }
 
-        public void Configure(IApplicationBuilder app, AppDbContext dbContext)
+        public void Configure(IApplicationBuilder app)
         {
             app.UseMvc();
-            dbContext.Database.Migrate();
         }
     }
 }

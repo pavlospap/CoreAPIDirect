@@ -63,12 +63,7 @@ namespace CoreApiDirect.Demo
             });
         }
 
-        public void Configure(
-            IApplicationBuilder app,
-            IHostingEnvironment env,
-            AppDbContext appDbContext,
-            LogDbContext logDbContext,
-            IDataSeeder dataSeeder)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -93,11 +88,6 @@ namespace CoreApiDirect.Demo
                 SupportedUICultures = cultures
             })
             .UseMvc();
-
-            appDbContext.Database.Migrate();
-            logDbContext.Database.Migrate();
-
-            dataSeeder.SeedDataAsync().Wait();
         }
     }
 }
