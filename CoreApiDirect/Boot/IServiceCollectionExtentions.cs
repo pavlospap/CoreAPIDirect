@@ -67,7 +67,7 @@ namespace CoreApiDirect.Boot
                 .AddCoreApiDirect();
         }
 
-        private static IServiceCollection AddApiServices(this IServiceCollection services, CoreOptions options)
+        internal static IServiceCollection AddApiServices(this IServiceCollection services, CoreOptions options)
         {
             return services.AddSingleton<IActionContextAccessor, ActionContextAccessor>()
                 .AddScoped<IBooleanParameterParser, BooleanParameterParser>()
@@ -89,7 +89,7 @@ namespace CoreApiDirect.Boot
                 .AddSingleton<IPropertyProvider, PropertyProvider>()
                 .AddTransient<IQueryFilterPropertyWalker, QueryFilterPropertyWalker>()
                 .AddScoped<IQueryStringParser, QueryStringParser>()
-                .AddScoped(typeof(IResponseBuilder), options.ResponseBuilderType)
+                .AddScoped(typeof(IResponseBuilder), options.ResponseBuilderType ?? throw new InvalidOperationException("CoreApiDirect.Response.IResponseBuilder implementation is missing."))
                 .AddScoped<IRouteFilterBuilder, RouteFilterBuilder>()
                 .AddScoped<IRouteValidator, RouteValidator>()
                 .AddTransient<IShapePropertyWalker, ShapePropertyWalker>()
