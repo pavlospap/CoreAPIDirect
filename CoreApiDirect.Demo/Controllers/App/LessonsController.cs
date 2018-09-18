@@ -6,7 +6,7 @@ using CoreApiDirect.Demo.Entities.App;
 namespace CoreApiDirect.Demo.Controllers.App
 {
     [ApiRoute(typeof(School), typeof(Lesson))]
-    public class LessonsController : ControllerApi<string, Lesson, LessonOutDto, LessonInDto>
+    public class LessonsController : ControllerBase<string, Lesson, LessonOutDto, LessonInDto>
     {
     }
 }
