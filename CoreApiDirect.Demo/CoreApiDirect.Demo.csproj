@@ -8,7 +8,7 @@
     <Authors>Pavlos Papadopoulos</Authors>
     <Description>Demo for the CoreAPIDirect library</Description>
     <Copyright>Copyright © Pavlos Papadopoulos 2018</Copyright>
-    <LangVersion>7.3</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

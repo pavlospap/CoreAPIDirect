@@ -240,8 +240,8 @@ namespace CoreApiDirect.Tests.Controllers.Shaping
             dictSchool[nameof(SchoolOutDto.Id).Camelize()] = school.Id;
             dictSchool[nameof(SchoolOutDto.Name).Camelize()] = school.Name;
             dictSchool[nameof(SchoolOutDto.YearOfEstablishment).Camelize()] = school.YearOfEstablishment;
-            dictSchool[nameof(SchoolOutDto.Lessons).Camelize()] = CreateDetail(school.Lessons, nameof(LessonOutDto.Id), nameof(LessonOutDto.Name), nameof(LessonOutDto.WeekHours));
-            dictSchool[nameof(SchoolOutDto.Students).Camelize()] = CreateDetail(school.Students, nameof(StudentOutDto.Id), nameof(StudentOutDto.FirstName), nameof(StudentOutDto.LastName), nameof(StudentOutDto.FullName), nameof(StudentOutDto.DateOfBirth));
+            dictSchool[nameof(SchoolOutDto.Lessons).Camelize()] = CreateDetail(school.Lessons, nameof(LessonOutDto.Id), nameof(LessonOutDto.Name), nameof(LessonOutDto.WeekHours), nameof(LessonOutDto.Notes));
+            dictSchool[nameof(SchoolOutDto.Students).Camelize()] = CreateDetail(school.Students, nameof(StudentOutDto.Id), nameof(StudentOutDto.FirstName), nameof(StudentOutDto.LastName), nameof(StudentOutDto.FullName), nameof(StudentOutDto.DateOfBirth), nameof(StudentOutDto.Notes));
 
             return shapedSchool;
         }
@@ -259,7 +259,7 @@ namespace CoreApiDirect.Tests.Controllers.Shaping
 
             foreach (var lesson in school.Lessons)
             {
-                var shapedLesson = CreateObject(lesson, nameof(LessonOutDto.Id), nameof(LessonOutDto.Name), nameof(LessonOutDto.WeekHours));
+                var shapedLesson = CreateObject(lesson, nameof(LessonOutDto.Id), nameof(LessonOutDto.Name), nameof(LessonOutDto.WeekHours), nameof(LessonOutDto.Notes));
                 var dictLesson = (IDictionary<string, object>)shapedLesson;
 
                 dictLesson[nameof(LessonOutDto.Books).Camelize()] = CreateDetail(lesson.Books, nameof(BookOutDto.Id), nameof(BookOutDto.Name));
@@ -273,7 +273,7 @@ namespace CoreApiDirect.Tests.Controllers.Shaping
 
             foreach (var student in school.Students)
             {
-                var shapedStudent = CreateObject(student, nameof(StudentOutDto.Id), nameof(StudentOutDto.FirstName), nameof(StudentOutDto.LastName), nameof(StudentOutDto.FullName), nameof(StudentOutDto.DateOfBirth));
+                var shapedStudent = CreateObject(student, nameof(StudentOutDto.Id), nameof(StudentOutDto.FirstName), nameof(StudentOutDto.LastName), nameof(StudentOutDto.FullName), nameof(StudentOutDto.DateOfBirth), nameof(StudentOutDto.Notes));
                 var dictStudent = (IDictionary<string, object>)shapedStudent;
 
                 var shapedContactInfo = CreateObject(student.ContactInfo, nameof(ContactInfoOutDto.Id), nameof(ContactInfoOutDto.Email), nameof(ContactInfoOutDto.Address));
