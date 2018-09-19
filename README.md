@@ -40,8 +40,8 @@ public void ConfigureServices(IServiceCollection services)
     {
         options.MaxPageSize = 25;
         options.PageSize = 15;
-    })
-    .AddCoreApiDirect();
+    });
+    services.AddCoreApiDirect();
 }
 ```
 

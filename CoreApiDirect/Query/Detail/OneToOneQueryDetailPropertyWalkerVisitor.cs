@@ -15,10 +15,12 @@ namespace CoreApiDirect.Query.Detail
 
         public override Expression Output(QueryDetailWalkInfo walkInfo)
         {
+            var nullExpression = Expression.Constant(null, walkInfo.Type);
+
             return Expression.Condition(
-                Expression.NotEqual(walkInfo.Member, Expression.Default(walkInfo.Type)),
+                Expression.NotEqual(walkInfo.Member, nullExpression),
                 BuildMemberInitExpression(),
-                Expression.Default(walkInfo.Type));
+                nullExpression);
         }
     }
 }
