@@ -6,6 +6,6 @@ namespace CoreApiDirect.Demo.Repositories
 {
     public interface ISchoolsRepository : IRepository<School, int>
     {
-        Task<int> GetStudentCount(int schoolId);
+        Task<int> GetStudentNumber(int schoolId);
     }
 }

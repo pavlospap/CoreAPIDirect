@@ -57,12 +57,6 @@ namespace CoreApiDirect.Repositories
         void RemoveRange(IEnumerable<TEntity> entityList);
 
         /// <summary>
-        /// Gets a value that indicates whether the repository has changes.
-        /// </summary>
-        /// <returns>True if the repository has changes. Otherwise, false.</returns>
-        bool HasChanges();
-
-        /// <summary>
         /// Asynchronously saves all the repository changes.
         /// </summary>
         /// <returns>True if the changes have successfully been saved. Otherwise, false.</returns>

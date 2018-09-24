@@ -86,11 +86,7 @@ namespace CoreApiDirect.Controllers
         }
 
         private TFlow _flow;
-
-        /// <summary>
-        /// Gets the CoreApiDirect.Flow.IFlowDelete`1.
-        /// </summary>
-        protected TFlow Flow
+        internal TFlow Flow
         {
             get
             {
@@ -616,13 +612,6 @@ namespace CoreApiDirect.Controllers
 
         private async Task<IActionResult> Save()
         {
-            if (!Repository.HasChanges())
-            {
-                return new NoChangesToSaveResult(ResponseBuilder
-                    .AddInfo($"{GetLocalizedEntityName(typeof(TEntity).Name)} : {ApiResources.NoChangesToSave}")
-                    .Build());
-            }
-
             return await Repository.SaveAsync() ?
                 null :
                 new InternalServerErrorResult(ResponseBuilder
@@ -635,41 +624,13 @@ namespace CoreApiDirect.Controllers
             return EntityLocalizer?.GetLocalizedEntityName(entityName) ?? entityName;
         }
 
-        /// <summary>
-        /// Executes the flow during an HTTP POST request. 
-        /// </summary>
-        /// <param name="dto">A DTO object.</param>
-        /// <param name="entity">An entity object.</param>
-        /// <param name="saveFunc">A function that will be used for saving.</param>
-        /// <returns>Returns a Microsoft.AspNetCore.Mvc.IActionResult. If it's not null it will be used as the controller's action result.</returns>
-        protected abstract Task<IActionResult> PostFlow(TInDto dto, TEntity entity, Func<Task<IActionResult>> saveFunc);
+        internal abstract Task<IActionResult> PostFlow(TInDto dto, TEntity entity, Func<Task<IActionResult>> saveFunc);
 
-        /// <summary>
-        /// Executes the flow during an HTTP POST request. 
-        /// </summary>
-        /// <param name="dtoList">An enumerable of DTO objects.</param>
-        /// <param name="entityList">An enumerable of entity objects.</param>
-        /// <param name="saveFunc">A function that will be used for saving.</param>
-        /// <returns>Returns a Microsoft.AspNetCore.Mvc.IActionResult. If it's not null it will be used as the controller's action result.</returns>
-        protected abstract Task<IActionResult> PostFlow(IEnumerable<TInDto> dtoList, IEnumerable<TEntity> entityList, Func<Task<IActionResult>> saveFunc);
+        internal abstract Task<IActionResult> PostFlow(IEnumerable<TInDto> dtoList, IEnumerable<TEntity> entityList, Func<Task<IActionResult>> saveFunc);
 
-        /// <summary>
-        /// Executes the flow during an HTTP PUT or PATCH request. 
-        /// </summary>
-        /// <param name="dto">A DTO object.</param>
-        /// <param name="entity">An entity object.</param>
-        /// <param name="saveFunc">A function that will be used for saving.</param>
-        /// <returns>Returns a Microsoft.AspNetCore.Mvc.IActionResult. If it's not null it will be used as the controller's action result.</returns>
-        protected abstract Task<IActionResult> UpdateFlow(TInDto dto, TEntity entity, Func<Task<IActionResult>> saveFunc);
+        internal abstract Task<IActionResult> UpdateFlow(TInDto dto, TEntity entity, Func<Task<IActionResult>> saveFunc);
 
-        /// <summary>
-        /// Executes the flow during an HTTP PUT or PATCH request. 
-        /// </summary>
-        /// <param name="dtoList">An enumerable of DTO objects.</param>
-        /// <param name="entityList">An enumerable of entity objects.</param>
-        /// <param name="saveFunc">A function that will be used for saving.</param>
-        /// <returns>Returns a Microsoft.AspNetCore.Mvc.IActionResult. If it's not null it will be used as the controller's action result.</returns>
-        protected abstract Task<IActionResult> UpdateFlow(IEnumerable<TInDto> dtoList, IEnumerable<TEntity> entityList, Func<Task<IActionResult>> saveFunc);
+        internal abstract Task<IActionResult> UpdateFlow(IEnumerable<TInDto> dtoList, IEnumerable<TEntity> entityList, Func<Task<IActionResult>> saveFunc);
 
         /// <summary>
         /// Formats and writes a trace log message.

@@ -51,4 +51,4 @@ The documentation for the CoreAPIDirect library is located in this repo's [wiki]
 
 ## License
 
-MIT
+[MIT](https://github.com/pavlospap/CoreAPIDirect/blob/master/LICENSE)

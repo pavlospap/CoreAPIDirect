@@ -105,21 +105,12 @@ namespace CoreApiDirect.Repositories
         }
 
         /// <summary>
-        /// Gets a value that indicates whether the repository has changes.
-        /// </summary>
-        /// <returns>True if the repository has changes. Otherwise, false.</returns>
-        public bool HasChanges()
-        {
-            return _dbContext.ChangeTracker.HasChanges();
-        }
-
-        /// <summary>
         /// Asynchronously saves all the repository changes.
         /// </summary>
-        /// <returns>True if the changes have successfully been saved. Otherwise, false.</returns>
+        /// <returns>True if the repository has no changes or the changes have successfully been saved. Otherwise, false.</returns>
         public async Task<bool> SaveAsync()
         {
-            return await _dbContext.SaveChangesAsync() > 0;
+            return !_dbContext.ChangeTracker.HasChanges() || await _dbContext.SaveChangesAsync() > 0;
         }
     }
 }
