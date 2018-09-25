@@ -15,6 +15,7 @@ namespace CoreApiDirect.Options
         internal const int DEFAULT_MAX_PAGE_SIZE = 20;
         internal const int DEFAULT_PAGE_SIZE = 10;
         internal const bool DEFAULT_LOG_DATA = true;
+        internal const bool DEFAULT_CASE_SENSITIVE_SEARCH = false;
         internal const int MIN_RELATED_DATA_LEVEL = 0;
         internal const int MIN_PAGE_SIZE = 1;
 
@@ -88,6 +89,11 @@ namespace CoreApiDirect.Options
         /// Gets or sets a value that indicates whether the library will log, at debug level, the models sent and the data returned from the HTTP methods.
         /// </summary>
         public bool LogData { get; set; } = DEFAULT_LOG_DATA;
+
+        /// <summary>
+        /// Gets or sets a value that indicates whether the search, that is performed through a URL query string parameter, is case sensitive.
+        /// </summary>
+        public bool CaseSensitiveSearch { get; set; } = DEFAULT_CASE_SENSITIVE_SEARCH;
 
         private int _relatedDataLevel;
         private int _maxPageSize;

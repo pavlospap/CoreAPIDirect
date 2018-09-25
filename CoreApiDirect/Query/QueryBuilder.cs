@@ -46,7 +46,8 @@ namespace CoreApiDirect.Query
                 RelatedDataLevel = queryString.RelatedDataLevel,
                 Query = query,
                 QueryParams = queryParams,
-                Member = Expression.Parameter(type, type.Name.Camelize())
+                Member = Expression.Parameter(type, type.Name.Camelize()),
+                CaseSensitiveSearch = queryString.CaseSensitiveSearch
             });
         }
 

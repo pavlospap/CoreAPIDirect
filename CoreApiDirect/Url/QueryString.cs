@@ -80,6 +80,12 @@ namespace CoreApiDirect.Url
         }
 
         /// <summary>
+        /// Gets or sets a value that indicates whether the search is case sensitive.
+        /// </summary>
+        [QueryStringParameter]
+        public bool CaseSensitiveSearch { get; set; }
+
+        /// <summary>
         /// Gets or sets the query string errors.
         /// </summary>
         public List<QueryStringError> Errors { get; set; } = new List<QueryStringError>();
@@ -99,6 +105,7 @@ namespace CoreApiDirect.Url
             _options = options;
             ValidateRoute = options.ValidateRoute;
             ValidateQueryString = options.ValidateQueryString;
+            CaseSensitiveSearch = options.CaseSensitiveSearch;
             _relatedDataLevel = options.RelatedDataLevel;
             _pageSize = options.PageSize;
         }

@@ -56,9 +56,15 @@ namespace CoreApiDirect.Query
 
             foreach (var searchKeyProperty in searchKeyProperties)
             {
-                var property = Expression.Property(parameter, searchKeyProperty.Name);
-                var value = Expression.Constant(walkInfo.QueryParams.Search);
-                var containsMethod = typeof(String).GetMethod("Contains", new Type[] { typeof(String) });
+                Expression property = Expression.Property(parameter, searchKeyProperty.Name);
+                var value = Expression.Constant(walkInfo.CaseSensitiveSearch ? walkInfo.QueryParams.Search : walkInfo.QueryParams.Search.ToLower());
+
+                if (!walkInfo.CaseSensitiveSearch)
+                {
+                    property = Expression.Call(property, typeof(string).GetMethod("ToLower", new Type[] { }));
+                }
+
+                var containsMethod = typeof(string).GetMethod("Contains", new Type[] { typeof(string) });
                 var expression = Expression.Equal(Expression.Call(property, containsMethod, value), Expression.Constant(true));
                 expressionOr = expressionOr == null ? expression : Expression.OrElse(expressionOr, expression);
             }

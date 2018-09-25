@@ -34,6 +34,7 @@ namespace CoreApiDirect.Url.Parsing.Parameters
             {
                 case nameof(QueryString.ValidateRoute):
                 case nameof(QueryString.ValidateQueryString):
+                case nameof(QueryString.CaseSensitiveSearch):
                     return _booleanParameterParser;
                 case nameof(QueryString.RelatedDataLevel):
                 case nameof(QueryString.PageNumber):
