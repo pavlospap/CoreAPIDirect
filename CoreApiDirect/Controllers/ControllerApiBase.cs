@@ -10,6 +10,7 @@ using CoreApiDirect.Controllers.Shaping;
 using CoreApiDirect.Entities;
 using CoreApiDirect.Flow;
 using CoreApiDirect.Mapping;
+using CoreApiDirect.Options;
 using CoreApiDirect.Query;
 using CoreApiDirect.Repositories;
 using CoreApiDirect.Resources;
@@ -21,6 +22,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
 namespace CoreApiDirect.Controllers
@@ -85,6 +87,19 @@ namespace CoreApiDirect.Controllers
             }
         }
 
+        private CoreOptions _options;
+
+        /// <summary>
+        /// Gets the CoreApiDirect.Options.CoreOptions.
+        /// </summary>
+        protected CoreOptions Options
+        {
+            get
+            {
+                return _options ?? (_options = HttpContext?.RequestServices?.GetRequiredService<IOptions<CoreOptions>>().Value);
+            }
+        }
+
         private TFlow _flow;
         internal TFlow Flow
         {
@@ -121,12 +136,12 @@ namespace CoreApiDirect.Controllers
             }
         }
 
-        private ILogger<Controller> _logger;
-        private ILogger<Controller> Logger
+        private ILogger<ControllerBase> _logger;
+        private ILogger<ControllerBase> Logger
         {
             get
             {
-                return _logger ?? (_logger = (ILogger<Controller>)HttpContext?.RequestServices?.GetRequiredService(typeof(ILogger<>).MakeGenericType(GetType())));
+                return _logger ?? (_logger = (ILogger<ControllerBase>)HttpContext?.RequestServices?.GetRequiredService(typeof(ILogger<>).MakeGenericType(GetType())));
             }
         }
 
@@ -199,8 +214,11 @@ namespace CoreApiDirect.Controllers
 
             Response.Headers.Add("X-Paging", PagingHeaderBuilder.Build(this, queryString, entityList));
 
+            var data = ApiMapper.Map<IEnumerable<TOutDto>>(entityList).Select(p => Shaper.Shape(p, queryString));
+            LogData(data);
+
             return Ok(ResponseBuilder
-                .AddData(ApiMapper.Map<IEnumerable<TOutDto>>(entityList).Select(p => Shaper.Shape(p, queryString)))
+                .AddData(data)
                 .Build());
         }
 
@@ -225,8 +243,11 @@ namespace CoreApiDirect.Controllers
                 return await BuildResponseForNotFoundEntity(id, queryString);
             }
 
+            var data = Shaper.Shape(ApiMapper.Map<TOutDto>(entity), queryString);
+            LogData(data);
+
             return Ok(ResponseBuilder
-                .AddData(Shaper.Shape(ApiMapper.Map<TOutDto>(entity), queryString))
+                .AddData(data)
                 .Build());
         }
 
@@ -253,8 +274,11 @@ namespace CoreApiDirect.Controllers
                 return await BuildResponseForNotFoundEntity(missingIds, queryString);
             }
 
+            var data = ApiMapper.Map<IEnumerable<TOutDto>>(entityList).Select(p => Shaper.Shape(p, queryString));
+            LogData(data);
+
             return Ok(ResponseBuilder
-                .AddData(ApiMapper.Map<IEnumerable<TOutDto>>(entityList).Select(p => Shaper.Shape(p, queryString)))
+                .AddData(data)
                 .Build());
         }
 
@@ -267,6 +291,8 @@ namespace CoreApiDirect.Controllers
         [ValidateDto]
         public virtual async Task<IActionResult> Post([FromBody] TInDto dto)
         {
+            LogData(dto);
+
             await ValidateRoute(forceValidation: true);
             if (ResponseBuilder.HasErrors())
             {
@@ -283,8 +309,11 @@ namespace CoreApiDirect.Controllers
                 return result;
             }
 
+            var data = ApiMapper.Map<TOutDto>(entity);
+            LogData(data);
+
             return CreatedAtAction(nameof(Get), new { id = entity.Id }, ResponseBuilder
-                .AddData(ApiMapper.Map<TOutDto>(entity))
+                .AddData(data)
                 .Build());
         }
 
@@ -298,6 +327,8 @@ namespace CoreApiDirect.Controllers
         [ValidateDtoList]
         public virtual async Task<IActionResult> PostBatch([FromBody] IEnumerable<TInDto> dtoList)
         {
+            LogData(dtoList);
+
             await ValidateRoute(forceValidation: true);
             if (ResponseBuilder.HasErrors())
             {
@@ -317,6 +348,8 @@ namespace CoreApiDirect.Controllers
             var outDtoList = ApiMapper.Map<IEnumerable<TOutDto>>(entityList);
             var ids = string.Join(',', outDtoList.Select(p => p.Id));
 
+            LogData(outDtoList);
+
             return CreatedAtAction(nameof(GetBatch), new { ids }, ResponseBuilder
                 .AddData(outDtoList)
                 .Build());
@@ -334,6 +367,8 @@ namespace CoreApiDirect.Controllers
         [ValidateQueryString]
         public virtual async Task<IActionResult> Put(TKey id, [FromBody] TInDto dto, QueryString queryString)
         {
+            LogData(dto);
+
             var query = Repository.Query.Where(p => p.Id.Equals(id));
             query = ApplyRouteParams(query);
 
@@ -368,6 +403,8 @@ namespace CoreApiDirect.Controllers
         [ValidateQueryString]
         public virtual async Task<IActionResult> PutBatch(KeyList<TKey> ids, [FromBody] IEnumerable<TInDto> dtoList, QueryString queryString)
         {
+            LogData(dtoList);
+
             if (ids.Count() != dtoList.Count())
             {
                 return BadRequest(ResponseBuilder.AddError(ApiResources.IdAndDtoNumNotEqual).Build());
@@ -415,6 +452,8 @@ namespace CoreApiDirect.Controllers
         [ValidateQueryString]
         public virtual async Task<IActionResult> Patch(TKey id, [FromBody] JsonPatchDocument<TInDto> patchDto, QueryString queryString)
         {
+            LogData(patchDto);
+
             if (patchDto == null)
             {
                 return new ApiUnprocessableEntityResult(ResponseBuilder.AddError(ApiResources.PatchDataMissing).Build());
@@ -691,6 +730,14 @@ namespace CoreApiDirect.Controllers
             return data is string ?
                 Convert.ToString(data) :
                 data.ToJson(Formatting.Indented);
+        }
+
+        private void LogData(object data)
+        {
+            if (Options.LogData)
+            {
+                LogDebug(data);
+            }
         }
     }
 }

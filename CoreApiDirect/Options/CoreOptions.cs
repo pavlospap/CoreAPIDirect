@@ -14,6 +14,7 @@ namespace CoreApiDirect.Options
         internal const int DEFAULT_RELATED_DATA_LEVEL = 0;
         internal const int DEFAULT_MAX_PAGE_SIZE = 20;
         internal const int DEFAULT_PAGE_SIZE = 10;
+        internal const bool DEFAULT_LOG_DATA = true;
         internal const int MIN_RELATED_DATA_LEVEL = 0;
         internal const int MIN_PAGE_SIZE = 1;
 
@@ -82,6 +83,11 @@ namespace CoreApiDirect.Options
         /// Gets or sets the implementation of the CoreApiDirect.Response.IResponseBuilder that will be used.
         /// </summary>
         public Type ResponseBuilderType { get; set; } = typeof(ResponseBuilder);
+
+        /// <summary>
+        /// Gets or sets a value that indicates whether the library will log, at debug level, the models sent and the data returned from the HTTP methods.
+        /// </summary>
+        public bool LogData { get; set; } = DEFAULT_LOG_DATA;
 
         private int _relatedDataLevel;
         private int _maxPageSize;
