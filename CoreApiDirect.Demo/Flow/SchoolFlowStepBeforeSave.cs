@@ -20,14 +20,14 @@ namespace CoreApiDirect.Demo.Flow
             _localizer = localizer;
         }
 
-        public override async Task<IActionResult> Execute(SchoolInDto dto, School entity)
+        public override async Task<IActionResult> ExecuteAsync(SchoolInDto dto, School entity)
         {
             if (entity.YearOfEstablishment != null && entity.YearOfEstablishment < 1700)
             {
                 return new BadRequestObjectResult(_responseBuilder.AddError(_localizer["YearOfEstablishmentError"]).Build());
             }
 
-            return await base.Execute(dto, entity);
+            return await base.ExecuteAsync(dto, entity);
         }
     }
 }

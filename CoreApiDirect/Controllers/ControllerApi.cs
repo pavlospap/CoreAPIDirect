@@ -18,24 +18,24 @@ namespace CoreApiDirect.Controllers
         where TOutDto : IKey<TKey>
         where TInDto : class
     {
-        internal override sealed async Task<IActionResult> PostFlow(TInDto dto, TEntity entity, Func<Task<IActionResult>> saveFunc)
+        internal override sealed async Task<IActionResult> PostFlowAsync(TInDto dto, TEntity entity, Func<Task<IActionResult>> saveFunc)
         {
-            return await Flow.Post(dto, entity, saveFunc);
+            return await Flow.PostAsync(dto, entity, saveFunc);
         }
 
-        internal override sealed async Task<IActionResult> PostFlow(IEnumerable<TInDto> dtoList, IEnumerable<TEntity> entityList, Func<Task<IActionResult>> saveFunc)
+        internal override sealed async Task<IActionResult> PostFlowAsync(IEnumerable<TInDto> dtoList, IEnumerable<TEntity> entityList, Func<Task<IActionResult>> saveFunc)
         {
-            return await Flow.Post(dtoList, entityList, saveFunc);
+            return await Flow.PostAsync(dtoList, entityList, saveFunc);
         }
 
-        internal override sealed async Task<IActionResult> UpdateFlow(TInDto dto, TEntity entity, Func<Task<IActionResult>> saveFunc)
+        internal override sealed async Task<IActionResult> UpdateFlowAsync(TInDto dto, TEntity entity, Func<Task<IActionResult>> saveFunc)
         {
-            return await Flow.Update(dto, entity, saveFunc);
+            return await Flow.UpdateAsync(dto, entity, saveFunc);
         }
 
-        internal override sealed async Task<IActionResult> UpdateFlow(IEnumerable<TInDto> dtoList, IEnumerable<TEntity> entityList, Func<Task<IActionResult>> saveFunc)
+        internal override sealed async Task<IActionResult> UpdateFlowAsync(IEnumerable<TInDto> dtoList, IEnumerable<TEntity> entityList, Func<Task<IActionResult>> saveFunc)
         {
-            return await Flow.Update(dtoList, entityList, saveFunc);
+            return await Flow.UpdateAsync(dtoList, entityList, saveFunc);
         }
     }
 
@@ -47,24 +47,24 @@ namespace CoreApiDirect.Controllers
     public abstract class ControllerApi<TKey, TEntity> : ControllerApiBase<TKey, TEntity, TEntity, TEntity, IFlow<TEntity>>
         where TEntity : class, IKey<TKey>
     {
-        internal override sealed Task<IActionResult> PostFlow(TEntity dto, TEntity entity, Func<Task<IActionResult>> saveFunc)
+        internal override sealed Task<IActionResult> PostFlowAsync(TEntity dto, TEntity entity, Func<Task<IActionResult>> saveFunc)
         {
-            return Flow.Post(entity, saveFunc);
+            return Flow.PostAsync(entity, saveFunc);
         }
 
-        internal override sealed Task<IActionResult> PostFlow(IEnumerable<TEntity> dtoList, IEnumerable<TEntity> entityList, Func<Task<IActionResult>> saveFunc)
+        internal override sealed Task<IActionResult> PostFlowAsync(IEnumerable<TEntity> dtoList, IEnumerable<TEntity> entityList, Func<Task<IActionResult>> saveFunc)
         {
-            return Flow.Post(entityList, saveFunc);
+            return Flow.PostAsync(entityList, saveFunc);
         }
 
-        internal override sealed Task<IActionResult> UpdateFlow(TEntity dto, TEntity entity, Func<Task<IActionResult>> saveFunc)
+        internal override sealed Task<IActionResult> UpdateFlowAsync(TEntity dto, TEntity entity, Func<Task<IActionResult>> saveFunc)
         {
-            return Flow.Update(entity, saveFunc);
+            return Flow.UpdateAsync(entity, saveFunc);
         }
 
-        internal override sealed Task<IActionResult> UpdateFlow(IEnumerable<TEntity> dtoList, IEnumerable<TEntity> entityList, Func<Task<IActionResult>> saveFunc)
+        internal override sealed Task<IActionResult> UpdateFlowAsync(IEnumerable<TEntity> dtoList, IEnumerable<TEntity> entityList, Func<Task<IActionResult>> saveFunc)
         {
-            return Flow.Update(entityList, saveFunc);
+            return Flow.UpdateAsync(entityList, saveFunc);
         }
     }
 }

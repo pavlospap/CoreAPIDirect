@@ -31,17 +31,17 @@ namespace CoreApiDirect.Routing
             _methodProvider = methodProvider;
         }
 
-        public async Task<RecordError> ValidateRoute(Type controllerType, IEnumerable<object> ids)
+        public async Task<RecordError> ValidateRouteAsync(Type controllerType, IEnumerable<object> ids)
         {
             _routeEntityTypes = controllerType.GetCustomAttribute<ApiRouteAttribute>().RouteEntityTypes;
             _ids = ids;
 
             foreach (var validation in new List<Func<Task<RecordError>>>()
             {
-                ValidateParentEntitiesExistence,
-                ValidateEntityExistence,
-                ValidateParentEntitiesRelations,
-                ValidateEntityRelations
+                ValidateParentEntitiesExistenceAsync,
+                ValidateEntityExistenceAsync,
+                ValidateParentEntitiesRelationsAsync,
+                ValidateEntityRelationsAsync
             })
             {
                 var result = await validation();
@@ -54,14 +54,14 @@ namespace CoreApiDirect.Routing
             return await Task.FromResult<RecordError>(null);
         }
 
-        private async Task<RecordError> ValidateParentEntitiesExistence()
+        private async Task<RecordError> ValidateParentEntitiesExistenceAsync()
         {
             for (int i = 0; i <= _routeEntityTypes.Count() - 2; i++)
             {
                 var entityType = _routeEntityTypes.ElementAt(i);
                 var id = Convert.ChangeType(_actionContextAccessor.GetRouteParamIgnoreCase(entityType.Name + "id"), entityType.BaseGenericType().GenericTypeArguments[0]);
 
-                var result = await ValidateEntityExistence(entityType, id);
+                var result = await ValidateEntityExistenceAsync(entityType, id);
                 if (result != null)
                 {
                     return result;
@@ -71,13 +71,13 @@ namespace CoreApiDirect.Routing
             return await Task.FromResult<RecordError>(null);
         }
 
-        private async Task<RecordError> ValidateEntityExistence()
+        private async Task<RecordError> ValidateEntityExistenceAsync()
         {
             var entityType = _routeEntityTypes.Last();
 
             foreach (var id in _ids)
             {
-                var result = await ValidateEntityExistence(entityType, id);
+                var result = await ValidateEntityExistenceAsync(entityType, id);
                 if (result != null)
                 {
                     return result;
@@ -87,12 +87,12 @@ namespace CoreApiDirect.Routing
             return await Task.FromResult<RecordError>(null);
         }
 
-        private async Task<RecordError> ValidateEntityExistence(Type entityType, object id)
+        private async Task<RecordError> ValidateEntityExistenceAsync(Type entityType, object id)
         {
             var expression = BuildEntityExistenceExpression(entityType, out ParameterExpression parameter, id);
             var lambda = Expression.Lambda(expression, parameter);
 
-            if (!await EntityExists(entityType, lambda))
+            if (!await EntityExistsAsync(entityType, lambda))
             {
                 return new RecordError
                 {
@@ -115,12 +115,12 @@ namespace CoreApiDirect.Routing
                 Expression.Constant(Convert.ChangeType(id, idProperty.PropertyType)));
         }
 
-        private async Task<bool> EntityExists(Type entityType, LambdaExpression filter)
+        private async Task<bool> EntityExistsAsync(Type entityType, LambdaExpression filter)
         {
             var genericExpression = MakeGenericExpression(entityType);
             var repository = _actionContextAccessor.ActionContext.HttpContext.RequestServices.GetService(typeof(IRepository<,>).MakeGenericType(new Type[] { entityType, entityType.BaseGenericType().GenericTypeArguments[0] }));
             var findAsyncMethod = repository.GetType().GetMethod("FindNoTrackingAsync", new Type[] { genericExpression });
-            var convertReturnTypeMethod = GetType().GetMethod(nameof(ConvertReturnType), BindingFlags.Instance | BindingFlags.NonPublic).MakeGenericMethod(entityType);
+            var convertReturnTypeMethod = GetType().GetMethod(nameof(ConvertReturnTypeAsync), BindingFlags.Instance | BindingFlags.NonPublic).MakeGenericMethod(entityType);
             var entity = await (Task<object>)convertReturnTypeMethod.Invoke(this, new object[] { findAsyncMethod, repository, filter });
 
             return entity != null;
@@ -132,12 +132,12 @@ namespace CoreApiDirect.Routing
             return typeof(Expression<>).MakeGenericType(new Type[] { funcType });
         }
 
-        private async Task<object> ConvertReturnType<TEntity>(MethodInfo findAsyncMethod, object repository, LambdaExpression filter)
+        private async Task<object> ConvertReturnTypeAsync<TEntity>(MethodInfo findAsyncMethod, object repository, LambdaExpression filter)
         {
             return await (Task<TEntity>)findAsyncMethod.Invoke(repository, new object[] { filter });
         }
 
-        private async Task<RecordError> ValidateParentEntitiesRelations()
+        private async Task<RecordError> ValidateParentEntitiesRelationsAsync()
         {
             for (int i = 0; i <= _routeEntityTypes.Count() - 3; i++)
             {
@@ -146,7 +146,7 @@ namespace CoreApiDirect.Routing
 
                 var detailId = Convert.ChangeType(_actionContextAccessor.GetRouteParamIgnoreCase(detailType.Name + "id"), detailType.BaseGenericType().GenericTypeArguments[0]);
 
-                var result = await ValidateEntitiesRelation(masterType, detailType, detailId);
+                var result = await ValidateEntitiesRelationAsync(masterType, detailType, detailId);
                 if (result != null)
                 {
                     return result;
@@ -156,7 +156,7 @@ namespace CoreApiDirect.Routing
             return await Task.FromResult<RecordError>(null);
         }
 
-        private async Task<RecordError> ValidateEntityRelations()
+        private async Task<RecordError> ValidateEntityRelationsAsync()
         {
             if (_routeEntityTypes.Count() < 2)
             {
@@ -168,7 +168,7 @@ namespace CoreApiDirect.Routing
 
             foreach (var id in _ids)
             {
-                var result = await ValidateEntitiesRelation(masterType, detailType, id);
+                var result = await ValidateEntitiesRelationAsync(masterType, detailType, id);
                 if (result != null)
                 {
                     return result;
@@ -178,12 +178,12 @@ namespace CoreApiDirect.Routing
             return await Task.FromResult<RecordError>(null);
         }
 
-        private async Task<RecordError> ValidateEntitiesRelation(Type masterType, Type detailType, object detailId)
+        private async Task<RecordError> ValidateEntitiesRelationAsync(Type masterType, Type detailType, object detailId)
         {
             var masterId = Convert.ChangeType(_actionContextAccessor.GetRouteParamIgnoreCase(masterType.Name + "id"), masterType.BaseGenericType().GenericTypeArguments[0]);
             var expression = BuildMasterDetailRelationExpression(masterType, detailType, masterId, detailId);
 
-            if (!await EntityExists(detailType, expression))
+            if (!await EntityExistsAsync(detailType, expression))
             {
                 return new RecordError
                 {

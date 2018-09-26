@@ -34,9 +34,9 @@ namespace CoreApiDirect.Flow
             _afterSave = afterSave;
         }
 
-        public async Task<IActionResult> Post(TInDto dto, TEntity entity, Func<Task<IActionResult>> saveFunc)
+        public async Task<IActionResult> PostAsync(TInDto dto, TEntity entity, Func<Task<IActionResult>> saveFunc)
         {
-            return await ProcessFlow(new List<FlowStepInfo>() {
+            return await ProcessFlowAsync(new List<FlowStepInfo>() {
                 new FlowStepInfo(_beforePost, dto, entity),
                 new FlowStepInfo(_beforeSave, dto, entity),
                 new FlowStepInfo(new SaveStep(saveFunc)),
@@ -45,9 +45,9 @@ namespace CoreApiDirect.Flow
             });
         }
 
-        public async Task<IActionResult> Post(IEnumerable<TInDto> dtoList, IEnumerable<TEntity> entityList, Func<Task<IActionResult>> saveFunc)
+        public async Task<IActionResult> PostAsync(IEnumerable<TInDto> dtoList, IEnumerable<TEntity> entityList, Func<Task<IActionResult>> saveFunc)
         {
-            return await ProcessFlow(new List<FlowStepInfo>() {
+            return await ProcessFlowAsync(new List<FlowStepInfo>() {
                 new FlowStepInfo(_beforePost, dtoList, entityList),
                 new FlowStepInfo(_beforeSave, dtoList, entityList),
                 new FlowStepInfo(new SaveStep(saveFunc)),
@@ -56,9 +56,9 @@ namespace CoreApiDirect.Flow
             });
         }
 
-        public async Task<IActionResult> Update(TInDto dto, TEntity entity, Func<Task<IActionResult>> saveFunc)
+        public async Task<IActionResult> UpdateAsync(TInDto dto, TEntity entity, Func<Task<IActionResult>> saveFunc)
         {
-            return await ProcessFlow(new List<FlowStepInfo>() {
+            return await ProcessFlowAsync(new List<FlowStepInfo>() {
                 new FlowStepInfo(_beforeUpdate, dto, entity),
                 new FlowStepInfo(_beforeSave, dto, entity),
                 new FlowStepInfo(new SaveStep(saveFunc)),
@@ -67,9 +67,9 @@ namespace CoreApiDirect.Flow
             });
         }
 
-        public async Task<IActionResult> Update(IEnumerable<TInDto> dtoList, IEnumerable<TEntity> entityList, Func<Task<IActionResult>> saveFunc)
+        public async Task<IActionResult> UpdateAsync(IEnumerable<TInDto> dtoList, IEnumerable<TEntity> entityList, Func<Task<IActionResult>> saveFunc)
         {
-            return await ProcessFlow(new List<FlowStepInfo>() {
+            return await ProcessFlowAsync(new List<FlowStepInfo>() {
                 new FlowStepInfo(_beforeUpdate, dtoList, entityList),
                 new FlowStepInfo(_beforeSave, dtoList, entityList),
                 new FlowStepInfo(new SaveStep(saveFunc)),
@@ -107,9 +107,9 @@ namespace CoreApiDirect.Flow
             _afterSave = afterSave;
         }
 
-        public async Task<IActionResult> Post(TEntity entity, Func<Task<IActionResult>> saveFunc)
+        public async Task<IActionResult> PostAsync(TEntity entity, Func<Task<IActionResult>> saveFunc)
         {
-            return await ProcessFlow(new List<FlowStepInfo>() {
+            return await ProcessFlowAsync(new List<FlowStepInfo>() {
                 new FlowStepInfo(_beforePost, entity),
                 new FlowStepInfo(_beforeSave, entity),
                 new FlowStepInfo(new SaveStep(saveFunc)),
@@ -118,9 +118,9 @@ namespace CoreApiDirect.Flow
             });
         }
 
-        public async Task<IActionResult> Post(IEnumerable<TEntity> entityList, Func<Task<IActionResult>> saveFunc)
+        public async Task<IActionResult> PostAsync(IEnumerable<TEntity> entityList, Func<Task<IActionResult>> saveFunc)
         {
-            return await ProcessFlow(new List<FlowStepInfo>() {
+            return await ProcessFlowAsync(new List<FlowStepInfo>() {
                 new FlowStepInfo(_beforePost, entityList),
                 new FlowStepInfo(_beforeSave, entityList),
                 new FlowStepInfo(new SaveStep(saveFunc)),
@@ -129,9 +129,9 @@ namespace CoreApiDirect.Flow
             });
         }
 
-        public async Task<IActionResult> Update(TEntity entity, Func<Task<IActionResult>> saveFunc)
+        public async Task<IActionResult> UpdateAsync(TEntity entity, Func<Task<IActionResult>> saveFunc)
         {
-            return await ProcessFlow(new List<FlowStepInfo>() {
+            return await ProcessFlowAsync(new List<FlowStepInfo>() {
                 new FlowStepInfo(_beforeUpdate, entity),
                 new FlowStepInfo(_beforeSave, entity),
                 new FlowStepInfo(new SaveStep(saveFunc)),
@@ -140,9 +140,9 @@ namespace CoreApiDirect.Flow
             });
         }
 
-        public async Task<IActionResult> Update(IEnumerable<TEntity> entityList, Func<Task<IActionResult>> saveFunc)
+        public async Task<IActionResult> UpdateAsync(IEnumerable<TEntity> entityList, Func<Task<IActionResult>> saveFunc)
         {
-            return await ProcessFlow(new List<FlowStepInfo>() {
+            return await ProcessFlowAsync(new List<FlowStepInfo>() {
                 new FlowStepInfo(_beforeUpdate, entityList),
                 new FlowStepInfo(_beforeSave, entityList),
                 new FlowStepInfo(new SaveStep(saveFunc)),

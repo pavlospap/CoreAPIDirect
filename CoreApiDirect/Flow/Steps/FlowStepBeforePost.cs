@@ -27,10 +27,10 @@ namespace CoreApiDirect.Flow.Steps
         /// <param name="dto">A DTO object.</param>
         /// <param name="entity">An entity object.</param>
         /// <returns>Returns a Microsoft.AspNetCore.Mvc.IActionResult. If it's not null it will be used as the controller's action result.</returns>
-        public override Task<IActionResult> Execute(TInDto dto, TEntity entity)
+        public override Task<IActionResult> ExecuteAsync(TInDto dto, TEntity entity)
         {
             _foreignKeysResolver.FillForeignKeysFromRoute(entity);
-            return base.Execute(dto, entity);
+            return base.ExecuteAsync(dto, entity);
         }
     }
 
@@ -56,10 +56,10 @@ namespace CoreApiDirect.Flow.Steps
         /// </summary>
         /// <param name="entity">An entity object.</param>
         /// <returns>Returns a Microsoft.AspNetCore.Mvc.IActionResult. If it's not null it will be used as the controller's action result.</returns>
-        public override Task<IActionResult> Execute(TEntity entity)
+        public override Task<IActionResult> ExecuteAsync(TEntity entity)
         {
             _foreignKeysResolver.FillForeignKeysFromRoute(entity);
-            return base.Execute(entity);
+            return base.ExecuteAsync(entity);
         }
     }
 }

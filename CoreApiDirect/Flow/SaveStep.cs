@@ -13,7 +13,7 @@ namespace CoreApiDirect.Flow
             _saveFunc = saveFunc;
         }
 
-        public override async Task<IActionResult> Execute()
+        public override async Task<IActionResult> ExecuteAsync()
         {
             return await _saveFunc();
         }

@@ -19,9 +19,9 @@ namespace CoreApiDirect.Demo.Controllers.App
         }
 
         [HttpGet("{id}/studentnum")]
-        public async Task<IActionResult> GetStudentNumber(int id)
+        public async Task<IActionResult> GetStudentNumberAsync(int id)
         {
-            int number = await _schoolsRepository.GetStudentNumber(id);
+            int number = await _schoolsRepository.GetStudentNumberAsync(id);
             return Ok(ResponseBuilder.AddData(new { number }).Build());
         }
     }

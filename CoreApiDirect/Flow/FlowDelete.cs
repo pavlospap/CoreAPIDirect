@@ -19,29 +19,29 @@ namespace CoreApiDirect.Flow
             _afterDelete = afterDelete;
         }
 
-        public async Task<IActionResult> Delete(TEntity entity, Func<Task<IActionResult>> saveFunc)
+        public async Task<IActionResult> DeleteAsync(TEntity entity, Func<Task<IActionResult>> saveFunc)
         {
-            return await ProcessFlow(new List<FlowStepInfo>() {
+            return await ProcessFlowAsync(new List<FlowStepInfo>() {
                 new FlowStepInfo(_beforeDelete, entity),
                 new FlowStepInfo(new SaveStep(saveFunc)),
                 new FlowStepInfo(_afterDelete, entity)
             });
         }
 
-        public async Task<IActionResult> Delete(IEnumerable<TEntity> entityList, Func<Task<IActionResult>> saveFunc)
+        public async Task<IActionResult> DeleteAsync(IEnumerable<TEntity> entityList, Func<Task<IActionResult>> saveFunc)
         {
-            return await ProcessFlow(new List<FlowStepInfo>() {
+            return await ProcessFlowAsync(new List<FlowStepInfo>() {
                 new FlowStepInfo(_beforeDelete, entityList),
                 new FlowStepInfo(new SaveStep(saveFunc)),
                 new FlowStepInfo(_afterDelete, entityList)
             });
         }
 
-        protected async Task<IActionResult> ProcessFlow(List<FlowStepInfo> flowStepInfoList)
+        protected async Task<IActionResult> ProcessFlowAsync(List<FlowStepInfo> flowStepInfoList)
         {
             foreach (var flowStepInfo in flowStepInfoList)
             {
-                var executeMethod = flowStepInfo.Step.GetType().GetMethod("Execute", flowStepInfo.ParameterTypes);
+                var executeMethod = flowStepInfo.Step.GetType().GetMethod("ExecuteAsync", flowStepInfo.ParameterTypes);
                 var result = await (Task<IActionResult>)executeMethod.Invoke(flowStepInfo.Step, flowStepInfo.Parameters);
                 if (result != null)
                 {

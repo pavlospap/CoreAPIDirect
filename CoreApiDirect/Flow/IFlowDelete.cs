@@ -17,7 +17,7 @@ namespace CoreApiDirect.Flow
         /// <param name="entity">An entity object.</param>
         /// <param name="saveFunc">A function that will be used for saving.</param>
         /// <returns>Returns a Microsoft.AspNetCore.Mvc.IActionResult. If it's not null it will be used as the controller's action result.</returns>
-        Task<IActionResult> Delete(TEntity entity, Func<Task<IActionResult>> saveFunc);
+        Task<IActionResult> DeleteAsync(TEntity entity, Func<Task<IActionResult>> saveFunc);
 
         /// <summary>
         /// Asynchronously performs actions before or after the deletion of an enumerable of entities.
@@ -25,6 +25,6 @@ namespace CoreApiDirect.Flow
         /// <param name="entityList">An enumerable of entity objects.</param>
         /// <param name="saveFunc">A function that will be used for saving.</param>
         /// <returns>Returns a Microsoft.AspNetCore.Mvc.IActionResult. If it's not null it will be used as the controller's action result.</returns>
-        Task<IActionResult> Delete(IEnumerable<TEntity> entityList, Func<Task<IActionResult>> saveFunc);
+        Task<IActionResult> DeleteAsync(IEnumerable<TEntity> entityList, Func<Task<IActionResult>> saveFunc);
     }
 }

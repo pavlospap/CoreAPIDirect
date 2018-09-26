@@ -19,7 +19,7 @@ namespace CoreApiDirect.Flow
         /// <param name="entity">An entity object.</param>
         /// <param name="saveFunc">A function that will be used for saving.</param>
         /// <returns>Returns a Microsoft.AspNetCore.Mvc.IActionResult. If it's not null it will be used as the controller's action result.</returns>
-        Task<IActionResult> Post(TInDto dto, TEntity entity, Func<Task<IActionResult>> saveFunc);
+        Task<IActionResult> PostAsync(TInDto dto, TEntity entity, Func<Task<IActionResult>> saveFunc);
 
         /// <summary>
         /// Asynchronously performs actions before or after the insertion of an enumerable of entities.
@@ -28,7 +28,7 @@ namespace CoreApiDirect.Flow
         /// <param name="entityList">An enumerable of entity objects.</param>
         /// <param name="saveFunc">A function that will be used for saving.</param>
         /// <returns>Returns a Microsoft.AspNetCore.Mvc.IActionResult. If it's not null it will be used as the controller's action result.</returns>
-        Task<IActionResult> Post(IEnumerable<TInDto> dtoList, IEnumerable<TEntity> entityList, Func<Task<IActionResult>> saveFunc);
+        Task<IActionResult> PostAsync(IEnumerable<TInDto> dtoList, IEnumerable<TEntity> entityList, Func<Task<IActionResult>> saveFunc);
 
         /// <summary>
         /// Asynchronously performs actions before or after the update of an entity.
@@ -37,7 +37,7 @@ namespace CoreApiDirect.Flow
         /// <param name="entity">An entity object.</param>
         /// <param name="saveFunc">A function that will be used for saving.</param>
         /// <returns>Returns a Microsoft.AspNetCore.Mvc.IActionResult. If it's not null it will be used as the controller's action result.</returns>
-        Task<IActionResult> Update(TInDto dto, TEntity entity, Func<Task<IActionResult>> saveFunc);
+        Task<IActionResult> UpdateAsync(TInDto dto, TEntity entity, Func<Task<IActionResult>> saveFunc);
 
         /// <summary>
         /// Asynchronously performs actions before or after the update of an enumerable of entities.
@@ -46,7 +46,7 @@ namespace CoreApiDirect.Flow
         /// <param name="entityList">An enumerable of entity objects.</param>
         /// <param name="saveFunc">A function that will be used for saving.</param>
         /// <returns>Returns a Microsoft.AspNetCore.Mvc.IActionResult. If it's not null it will be used as the controller's action result.</returns>
-        Task<IActionResult> Update(IEnumerable<TInDto> dtoList, IEnumerable<TEntity> entityList, Func<Task<IActionResult>> saveFunc);
+        Task<IActionResult> UpdateAsync(IEnumerable<TInDto> dtoList, IEnumerable<TEntity> entityList, Func<Task<IActionResult>> saveFunc);
     }
 
     /// <summary>
@@ -61,7 +61,7 @@ namespace CoreApiDirect.Flow
         /// <param name="entity">An entity object.</param>
         /// <param name="saveFunc">A function that will be used for saving.</param>
         /// <returns>Returns a Microsoft.AspNetCore.Mvc.IActionResult. If it's not null it will be used as the controller's action result.</returns>
-        Task<IActionResult> Post(TEntity entity, Func<Task<IActionResult>> saveFunc);
+        Task<IActionResult> PostAsync(TEntity entity, Func<Task<IActionResult>> saveFunc);
 
         /// <summary>
         /// Asynchronously performs actions before or after the insertion of an enumerable of entities.
@@ -69,7 +69,7 @@ namespace CoreApiDirect.Flow
         /// <param name="entityList">An enumerable of entity objects.</param>
         /// <param name="saveFunc">A function that will be used for saving.</param>
         /// <returns>Returns a Microsoft.AspNetCore.Mvc.IActionResult. If it's not null it will be used as the controller's action result.</returns>
-        Task<IActionResult> Post(IEnumerable<TEntity> entityList, Func<Task<IActionResult>> saveFunc);
+        Task<IActionResult> PostAsync(IEnumerable<TEntity> entityList, Func<Task<IActionResult>> saveFunc);
 
         /// <summary>
         /// Asynchronously performs actions before or after the update of an entity.
@@ -77,7 +77,7 @@ namespace CoreApiDirect.Flow
         /// <param name="entity">An entity object.</param>
         /// <param name="saveFunc">A function that will be used for saving.</param>
         /// <returns>Returns a Microsoft.AspNetCore.Mvc.IActionResult. If it's not null it will be used as the controller's action result.</returns>
-        Task<IActionResult> Update(TEntity entity, Func<Task<IActionResult>> saveFunc);
+        Task<IActionResult> UpdateAsync(TEntity entity, Func<Task<IActionResult>> saveFunc);
 
         /// <summary>
         /// Asynchronously performs actions before or after the update of an enumerable of entities.
@@ -85,6 +85,6 @@ namespace CoreApiDirect.Flow
         /// <param name="entityList">An enumerable of entity objects.</param>
         /// <param name="saveFunc">A function that will be used for saving.</param>
         /// <returns>Returns a Microsoft.AspNetCore.Mvc.IActionResult. If it's not null it will be used as the controller's action result.</returns>
-        Task<IActionResult> Update(IEnumerable<TEntity> entityList, Func<Task<IActionResult>> saveFunc);
+        Task<IActionResult> UpdateAsync(IEnumerable<TEntity> entityList, Func<Task<IActionResult>> saveFunc);
     }
 }

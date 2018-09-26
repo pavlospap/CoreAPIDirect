@@ -14,7 +14,7 @@ namespace CoreApiDirect.Flow
         /// Asynchronously performs actions before or after the insertion, update or deletion of an entity or an enumerable of entities.
         /// </summary>
         /// <returns>Returns a Microsoft.AspNetCore.Mvc.IActionResult. If it's not null it will be used as the controller's action result.</returns>
-        public async virtual Task<IActionResult> Execute()
+        public async virtual Task<IActionResult> ExecuteAsync()
         {
             return await Task.FromResult<IActionResult>(null);
         }
@@ -31,9 +31,9 @@ namespace CoreApiDirect.Flow
         /// Asynchronously performs actions before or after the insertion or update of an entity or an enumerable of entities.
         /// </summary>
         /// <returns>Returns a Microsoft.AspNetCore.Mvc.IActionResult. If it's not null it will be used as the controller's action result.</returns>
-        public override sealed async Task<IActionResult> Execute()
+        public override sealed async Task<IActionResult> ExecuteAsync()
         {
-            return await base.Execute();
+            return await base.ExecuteAsync();
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace CoreApiDirect.Flow
         /// <param name="dto">A DTO object.</param>
         /// <param name="entity">An entity object.</param>
         /// <returns>Returns a Microsoft.AspNetCore.Mvc.IActionResult. If it's not null it will be used as the controller's action result.</returns>
-        public virtual async Task<IActionResult> Execute(TInDto dto, TEntity entity)
+        public virtual async Task<IActionResult> ExecuteAsync(TInDto dto, TEntity entity)
         {
             return await Task.FromResult<IActionResult>(null);
         }
@@ -53,11 +53,11 @@ namespace CoreApiDirect.Flow
         /// <param name="dtoList">An enumerable of DTO objects.</param>
         /// <param name="entityList">An enumerable of entity objects.</param>
         /// <returns>Returns a Microsoft.AspNetCore.Mvc.IActionResult. If it's not null it will be used as the controller's action result.</returns>
-        public async Task<IActionResult> Execute(IEnumerable<TInDto> dtoList, IEnumerable<TEntity> entityList)
+        public async Task<IActionResult> ExecuteAsync(IEnumerable<TInDto> dtoList, IEnumerable<TEntity> entityList)
         {
             for (int i = 0; i <= dtoList.Count() - 1; i++)
             {
-                var result = await Execute(dtoList.ElementAt(i), entityList.ElementAt(i));
+                var result = await ExecuteAsync(dtoList.ElementAt(i), entityList.ElementAt(i));
                 if (result != null)
                 {
                     return result;
@@ -78,9 +78,9 @@ namespace CoreApiDirect.Flow
         /// Asynchronously performs actions before or after the insertion, update or deletion of an entity or an enumerable of entities.
         /// </summary>
         /// <returns>Returns a Microsoft.AspNetCore.Mvc.IActionResult. If it's not null it will be used as the controller's action result.</returns>
-        public override sealed async Task<IActionResult> Execute()
+        public override sealed async Task<IActionResult> ExecuteAsync()
         {
-            return await base.Execute();
+            return await base.ExecuteAsync();
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace CoreApiDirect.Flow
         /// </summary>
         /// <param name="entity">An entity object.</param>
         /// <returns>Returns a Microsoft.AspNetCore.Mvc.IActionResult. If it's not null it will be used as the controller's action result.</returns>
-        public virtual async Task<IActionResult> Execute(TEntity entity)
+        public virtual async Task<IActionResult> ExecuteAsync(TEntity entity)
         {
             return await Task.FromResult<IActionResult>(null);
         }
@@ -98,11 +98,11 @@ namespace CoreApiDirect.Flow
         /// </summary>
         /// <param name="entityList">An enumerable of entity objects.</param>
         /// <returns>Returns a Microsoft.AspNetCore.Mvc.IActionResult. If it's not null it will be used as the controller's action result.</returns>
-        public async Task<IActionResult> Execute(IEnumerable<TEntity> entityList)
+        public async Task<IActionResult> ExecuteAsync(IEnumerable<TEntity> entityList)
         {
             foreach (var entity in entityList)
             {
-                var result = await Execute(entity);
+                var result = await ExecuteAsync(entity);
                 if (result != null)
                 {
                     return result;

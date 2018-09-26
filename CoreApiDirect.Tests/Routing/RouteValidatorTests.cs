@@ -72,7 +72,7 @@ namespace CoreApiDirect.Tests.Routing
 
         private RecordError GetValidationResult(Type controller, string routeEntityInfo, string ids)
         {
-            return new RouteValidator(GetActionContextAccessor(routeEntityInfo, GetRepositoryServices()), new PropertyProvider(), new MethodProvider()).ValidateRoute(controller, ids.Split(',', StringSplitOptions.RemoveEmptyEntries)).Result;
+            return new RouteValidator(GetActionContextAccessor(routeEntityInfo, GetRepositoryServices()), new PropertyProvider(), new MethodProvider()).ValidateRouteAsync(controller, ids.Split(',', StringSplitOptions.RemoveEmptyEntries)).Result;
         }
 
         private IServiceCollection GetRepositoryServices()

@@ -54,7 +54,7 @@ namespace CoreApiDirect.Tests.Controllers
 
         private PagedList<Student> GetPagedList(int pageNumber)
         {
-            return PagedList<Student>.Create(_repository.Query,
+            return PagedList<Student>.CreateAsync(_repository.Query,
                 new QueryString(new CoreOptionsTests().Value) { PageNumber = pageNumber }).Result;
         }
     }

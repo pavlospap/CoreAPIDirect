@@ -7,10 +7,10 @@ namespace CoreApiDirect.Demo.Flow
 {
     public class SystemInfoFlowStepBeforeSave : FlowStepBeforeSave<SystemInfo>
     {
-        public override async Task<IActionResult> Execute(SystemInfo entity)
+        public override async Task<IActionResult> ExecuteAsync(SystemInfo entity)
         {
             entity.OS = entity.OS.ToUpper();
-            return await base.Execute(entity);
+            return await base.ExecuteAsync(entity);
         }
     }
 }

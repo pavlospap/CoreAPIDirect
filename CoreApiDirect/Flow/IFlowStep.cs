@@ -6,18 +6,18 @@ namespace CoreApiDirect.Flow
 {
     internal interface IFlowStep
     {
-        Task<IActionResult> Execute();
+        Task<IActionResult> ExecuteAsync();
     }
 
     internal interface IFlowStep<TInDto, TEntity> : IFlowStep
     {
-        Task<IActionResult> Execute(TInDto dto, TEntity entity);
-        Task<IActionResult> Execute(IEnumerable<TInDto> dtoList, IEnumerable<TEntity> entityList);
+        Task<IActionResult> ExecuteAsync(TInDto dto, TEntity entity);
+        Task<IActionResult> ExecuteAsync(IEnumerable<TInDto> dtoList, IEnumerable<TEntity> entityList);
     }
 
     internal interface IFlowStep<TEntity> : IFlowStep
     {
-        Task<IActionResult> Execute(TEntity entity);
-        Task<IActionResult> Execute(IEnumerable<TEntity> entityList);
+        Task<IActionResult> ExecuteAsync(TEntity entity);
+        Task<IActionResult> ExecuteAsync(IEnumerable<TEntity> entityList);
     }
 }

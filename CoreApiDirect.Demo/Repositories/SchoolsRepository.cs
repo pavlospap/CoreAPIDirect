@@ -17,7 +17,7 @@ namespace CoreApiDirect.Demo.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<int> GetStudentNumber(int schoolId)
+        public async Task<int> GetStudentNumberAsync(int schoolId)
         {
             var number = _dbContext.Set<School>().Include(p => p.Students).FirstOrDefault(p => p.Id == schoolId).Students.Count();
             return await Task.FromResult(number);

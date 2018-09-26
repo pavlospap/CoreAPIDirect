@@ -195,17 +195,17 @@ namespace CoreApiDirect.Controllers
         /// <returns>The result of the action.</returns>
         [HttpGet]
         [ValidateQueryString]
-        public virtual async Task<IActionResult> Get(QueryString queryString)
+        public virtual async Task<IActionResult> GetAsync(QueryString queryString)
         {
             var query = Repository.Query.AsNoTracking();
             query = ApplyRouteParams(query);
             query = QueryBuilder.Build(query, queryString);
 
-            var entityList = await PagedList<TEntity>.Create(query, queryString);
+            var entityList = await PagedList<TEntity>.CreateAsync(query, queryString);
 
             if (!entityList.Any())
             {
-                await ValidateRoute(queryString);
+                await ValidateRouteAsync(queryString);
                 if (ResponseBuilder.HasErrors())
                 {
                     return NotFound(ResponseBuilder.Build());
@@ -230,7 +230,7 @@ namespace CoreApiDirect.Controllers
         /// <returns>The result of the action.</returns>
         [HttpGet("{id}")]
         [ValidateQueryString]
-        public virtual async Task<IActionResult> GetById(TKey id, QueryString queryString)
+        public virtual async Task<IActionResult> GetByIdAsync(TKey id, QueryString queryString)
         {
             var query = Repository.Query.AsNoTracking().Where(p => p.Id.Equals(id));
             query = ApplyRouteParams(query);
@@ -240,7 +240,7 @@ namespace CoreApiDirect.Controllers
 
             if (entity == null)
             {
-                return await BuildResponseForNotFoundEntity(id, queryString);
+                return await BuildResponseForNotFoundEntityAsync(id, queryString);
             }
 
             var data = Shaper.Shape(ApiMapper.Map<TOutDto>(entity), queryString);
@@ -260,7 +260,7 @@ namespace CoreApiDirect.Controllers
         [HttpGet]
         [BatchRoute("({ids})")]
         [ValidateQueryString]
-        public virtual async Task<IActionResult> GetBatch(KeyList<TKey> ids, QueryString queryString)
+        public virtual async Task<IActionResult> GetBatchAsync(KeyList<TKey> ids, QueryString queryString)
         {
             var query = Repository.Query.AsNoTracking().Where(p => ids.Contains(p.Id));
             query = ApplyRouteParams(query);
@@ -271,7 +271,7 @@ namespace CoreApiDirect.Controllers
             if (ids.Count != entityList.Count)
             {
                 var missingIds = ids.Except(entityList.Select(p => p.Id));
-                return await BuildResponseForNotFoundEntity(missingIds, queryString);
+                return await BuildResponseForNotFoundEntityAsync(missingIds, queryString);
             }
 
             var data = ApiMapper.Map<IEnumerable<TOutDto>>(entityList).Select(p => Shaper.Shape(p, queryString));
@@ -289,11 +289,11 @@ namespace CoreApiDirect.Controllers
         /// <returns>The result of the action.</returns>
         [HttpPost]
         [ValidateDto]
-        public virtual async Task<IActionResult> Post([FromBody] TInDto dto)
+        public virtual async Task<IActionResult> PostAsync([FromBody] TInDto dto)
         {
             LogData(dto);
 
-            await ValidateRoute(forceValidation: true);
+            await ValidateRouteAsync(forceValidation: true);
             if (ResponseBuilder.HasErrors())
             {
                 return NotFound(ResponseBuilder.Build());
@@ -303,7 +303,7 @@ namespace CoreApiDirect.Controllers
 
             Repository.Add(entity);
 
-            var result = await PostFlow(dto, entity, Save);
+            var result = await PostFlowAsync(dto, entity, SaveAsync);
             if (result != null)
             {
                 return result;
@@ -312,7 +312,7 @@ namespace CoreApiDirect.Controllers
             var data = ApiMapper.Map<TOutDto>(entity);
             LogData(data);
 
-            return CreatedAtAction(nameof(Get), new { id = entity.Id }, ResponseBuilder
+            return CreatedAtAction(nameof(GetAsync), new { id = entity.Id }, ResponseBuilder
                 .AddData(data)
                 .Build());
         }
@@ -325,11 +325,11 @@ namespace CoreApiDirect.Controllers
         [HttpPost]
         [BatchRoute]
         [ValidateDtoList]
-        public virtual async Task<IActionResult> PostBatch([FromBody] IEnumerable<TInDto> dtoList)
+        public virtual async Task<IActionResult> PostBatchAsync([FromBody] IEnumerable<TInDto> dtoList)
         {
             LogData(dtoList);
 
-            await ValidateRoute(forceValidation: true);
+            await ValidateRouteAsync(forceValidation: true);
             if (ResponseBuilder.HasErrors())
             {
                 return NotFound(ResponseBuilder.Build());
@@ -339,7 +339,7 @@ namespace CoreApiDirect.Controllers
 
             Repository.AddRange(entityList);
 
-            var result = await PostFlow(dtoList, entityList, Save);
+            var result = await PostFlowAsync(dtoList, entityList, SaveAsync);
             if (result != null)
             {
                 return result;
@@ -350,7 +350,7 @@ namespace CoreApiDirect.Controllers
 
             LogData(outDtoList);
 
-            return CreatedAtAction(nameof(GetBatch), new { ids }, ResponseBuilder
+            return CreatedAtAction(nameof(GetBatchAsync), new { ids }, ResponseBuilder
                 .AddData(outDtoList)
                 .Build());
         }
@@ -365,7 +365,7 @@ namespace CoreApiDirect.Controllers
         [HttpPut("{id}")]
         [ValidateDto]
         [ValidateQueryString]
-        public virtual async Task<IActionResult> Put(TKey id, [FromBody] TInDto dto, QueryString queryString)
+        public virtual async Task<IActionResult> PutAsync(TKey id, [FromBody] TInDto dto, QueryString queryString)
         {
             LogData(dto);
 
@@ -376,12 +376,12 @@ namespace CoreApiDirect.Controllers
 
             if (entity == null)
             {
-                return await BuildResponseForNotFoundEntity(id, queryString);
+                return await BuildResponseForNotFoundEntityAsync(id, queryString);
             }
 
             ApiMapper.Map(dto, entity);
 
-            var result = await UpdateFlow(dto, entity, Save);
+            var result = await UpdateFlowAsync(dto, entity, SaveAsync);
             if (result != null)
             {
                 return result;
@@ -401,7 +401,7 @@ namespace CoreApiDirect.Controllers
         [BatchRoute("({ids})")]
         [ValidateDtoList]
         [ValidateQueryString]
-        public virtual async Task<IActionResult> PutBatch(KeyList<TKey> ids, [FromBody] IEnumerable<TInDto> dtoList, QueryString queryString)
+        public virtual async Task<IActionResult> PutBatchAsync(KeyList<TKey> ids, [FromBody] IEnumerable<TInDto> dtoList, QueryString queryString)
         {
             LogData(dtoList);
 
@@ -418,7 +418,7 @@ namespace CoreApiDirect.Controllers
             if (ids.Count() != entityList.Count())
             {
                 var missingIds = ids.Except(entityList.Select(p => p.Id));
-                return await BuildResponseForNotFoundEntity(missingIds, queryString);
+                return await BuildResponseForNotFoundEntityAsync(missingIds, queryString);
             }
 
             var sortedEntityList = new List<TEntity>();
@@ -432,7 +432,7 @@ namespace CoreApiDirect.Controllers
                 cnt++;
             }
 
-            var result = await UpdateFlow(dtoList, sortedEntityList, Save);
+            var result = await UpdateFlowAsync(dtoList, sortedEntityList, SaveAsync);
             if (result != null)
             {
                 return result;
@@ -450,7 +450,7 @@ namespace CoreApiDirect.Controllers
         /// <returns>The result of the action.</returns>
         [HttpPatch("{id}")]
         [ValidateQueryString]
-        public virtual async Task<IActionResult> Patch(TKey id, [FromBody] JsonPatchDocument<TInDto> patchDto, QueryString queryString)
+        public virtual async Task<IActionResult> PatchAsync(TKey id, [FromBody] JsonPatchDocument<TInDto> patchDto, QueryString queryString)
         {
             LogData(patchDto);
 
@@ -466,7 +466,7 @@ namespace CoreApiDirect.Controllers
 
             if (entity == null)
             {
-                return await BuildResponseForNotFoundEntity(id, queryString);
+                return await BuildResponseForNotFoundEntityAsync(id, queryString);
             }
 
             var dto = ApiMapper.Map<TInDto>(entity);
@@ -482,7 +482,7 @@ namespace CoreApiDirect.Controllers
 
             ApiMapper.Map(dto, entity);
 
-            var result = await UpdateFlow(dto, entity, Save);
+            var result = await UpdateFlowAsync(dto, entity, SaveAsync);
             if (result != null)
             {
                 return result;
@@ -499,7 +499,7 @@ namespace CoreApiDirect.Controllers
         /// <returns>The result of the action.</returns>
         [HttpDelete("{id}")]
         [ValidateQueryString]
-        public virtual async Task<IActionResult> Delete(TKey id, QueryString queryString)
+        public virtual async Task<IActionResult> DeleteAsync(TKey id, QueryString queryString)
         {
             var query = Repository.Query.Where(p => p.Id.Equals(id));
             query = ApplyRouteParams(query);
@@ -508,12 +508,12 @@ namespace CoreApiDirect.Controllers
 
             if (entity == null)
             {
-                return await BuildResponseForNotFoundEntity(id, queryString);
+                return await BuildResponseForNotFoundEntityAsync(id, queryString);
             }
 
             Repository.Remove(entity);
 
-            var flowResult = await Flow.Delete(entity, Save);
+            var flowResult = await Flow.DeleteAsync(entity, SaveAsync);
             if (flowResult != null)
             {
                 return flowResult;
@@ -531,7 +531,7 @@ namespace CoreApiDirect.Controllers
         [HttpDelete]
         [BatchRoute("({ids})")]
         [ValidateQueryString]
-        public virtual async Task<IActionResult> DeleteBatch(KeyList<TKey> ids, QueryString queryString)
+        public virtual async Task<IActionResult> DeleteBatchAsync(KeyList<TKey> ids, QueryString queryString)
         {
             var query = Repository.Query.Where(p => ids.Contains(p.Id));
             query = ApplyRouteParams(query);
@@ -541,12 +541,12 @@ namespace CoreApiDirect.Controllers
             if (ids.Count() != entityList.Count())
             {
                 var missingIds = ids.Except(entityList.Select(p => p.Id));
-                return await BuildResponseForNotFoundEntity(missingIds, queryString);
+                return await BuildResponseForNotFoundEntityAsync(missingIds, queryString);
             }
 
             Repository.RemoveRange(entityList);
 
-            var flowResult = await Flow.Delete(entityList, Save);
+            var flowResult = await Flow.DeleteAsync(entityList, SaveAsync);
             if (flowResult != null)
             {
                 return flowResult;
@@ -561,14 +561,14 @@ namespace CoreApiDirect.Controllers
             return filter != null ? query.Where(filter) : query;
         }
 
-        private async Task<IActionResult> BuildResponseForNotFoundEntity(TKey id, QueryString queryString)
+        private async Task<IActionResult> BuildResponseForNotFoundEntityAsync(TKey id, QueryString queryString)
         {
-            return await BuildResponseForNotFoundEntity(new List<TKey> { id }, queryString);
+            return await BuildResponseForNotFoundEntityAsync(new List<TKey> { id }, queryString);
         }
 
-        private async Task<IActionResult> BuildResponseForNotFoundEntity(IEnumerable<TKey> ids, QueryString queryString)
+        private async Task<IActionResult> BuildResponseForNotFoundEntityAsync(IEnumerable<TKey> ids, QueryString queryString)
         {
-            await ValidateRoute(ids, queryString);
+            await ValidateRouteAsync(ids, queryString);
             if (!ResponseBuilder.HasErrors())
             {
                 AddRecordNotFoundError(ids);
@@ -577,26 +577,26 @@ namespace CoreApiDirect.Controllers
             return NotFound(ResponseBuilder.Build());
         }
 
-        private async Task ValidateRoute(QueryString queryString)
+        private async Task ValidateRouteAsync(QueryString queryString)
         {
-            await ValidateRoute(new List<TKey>(), queryString);
+            await ValidateRouteAsync(new List<TKey>(), queryString);
         }
 
         private async Task ValidateRoute(TKey id, QueryString queryString)
         {
-            await ValidateRoute(new List<TKey>() { id }, queryString);
+            await ValidateRouteAsync(new List<TKey>() { id }, queryString);
         }
 
-        private async Task ValidateRoute(bool forceValidation)
+        private async Task ValidateRouteAsync(bool forceValidation)
         {
-            await ValidateRoute(new List<TKey>(), null, forceValidation);
+            await ValidateRouteAsync(new List<TKey>(), null, forceValidation);
         }
 
-        private async Task ValidateRoute(IEnumerable<TKey> ids, QueryString queryString, bool forceValidation = false)
+        private async Task ValidateRouteAsync(IEnumerable<TKey> ids, QueryString queryString, bool forceValidation = false)
         {
             if (forceValidation || queryString.ValidateRoute)
             {
-                var result = await RouteValidator.ValidateRoute(GetType(), ids.Select(p => p as object));
+                var result = await RouteValidator.ValidateRouteAsync(GetType(), ids.Select(p => p as object));
 
                 if (result != null)
                 {
@@ -649,7 +649,7 @@ namespace CoreApiDirect.Controllers
                 $"{GetLocalizedEntityName(error.EntityType.Name)} : {ApiResources.Id} = {error.EntityId}");
         }
 
-        private async Task<IActionResult> Save()
+        private async Task<IActionResult> SaveAsync()
         {
             return await Repository.SaveAsync() ?
                 null :
@@ -663,13 +663,13 @@ namespace CoreApiDirect.Controllers
             return EntityLocalizer?.GetLocalizedEntityName(entityName) ?? entityName;
         }
 
-        internal abstract Task<IActionResult> PostFlow(TInDto dto, TEntity entity, Func<Task<IActionResult>> saveFunc);
+        internal abstract Task<IActionResult> PostFlowAsync(TInDto dto, TEntity entity, Func<Task<IActionResult>> saveFunc);
 
-        internal abstract Task<IActionResult> PostFlow(IEnumerable<TInDto> dtoList, IEnumerable<TEntity> entityList, Func<Task<IActionResult>> saveFunc);
+        internal abstract Task<IActionResult> PostFlowAsync(IEnumerable<TInDto> dtoList, IEnumerable<TEntity> entityList, Func<Task<IActionResult>> saveFunc);
 
-        internal abstract Task<IActionResult> UpdateFlow(TInDto dto, TEntity entity, Func<Task<IActionResult>> saveFunc);
+        internal abstract Task<IActionResult> UpdateFlowAsync(TInDto dto, TEntity entity, Func<Task<IActionResult>> saveFunc);
 
-        internal abstract Task<IActionResult> UpdateFlow(IEnumerable<TInDto> dtoList, IEnumerable<TEntity> entityList, Func<Task<IActionResult>> saveFunc);
+        internal abstract Task<IActionResult> UpdateFlowAsync(IEnumerable<TInDto> dtoList, IEnumerable<TEntity> entityList, Func<Task<IActionResult>> saveFunc);
 
         /// <summary>
         /// Formats and writes a trace log message.

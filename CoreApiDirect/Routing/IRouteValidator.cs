@@ -7,6 +7,6 @@ namespace CoreApiDirect.Routing
 {
     internal interface IRouteValidator
     {
-        Task<RecordError> ValidateRoute(Type controllerType, IEnumerable<object> ids);
+        Task<RecordError> ValidateRouteAsync(Type controllerType, IEnumerable<object> ids);
     }
 }
