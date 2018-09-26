@@ -13,20 +13,20 @@ namespace CoreApiDirect.Url.Parsing
 {
     internal class QueryStringParser : IQueryStringParser
     {
+        private readonly CoreOptions _options;
         private readonly QueryString _queryString;
         private readonly IPropertyProvider _propertyProvider;
         private readonly IParameterParserFactory _parameterParserFactory;
-        private readonly string[] _knownParameters;
 
         public QueryStringParser(
             IOptions<CoreOptions> options,
             IPropertyProvider propertyProvider,
             IParameterParserFactory parameterParserFactory)
         {
+            _options = options.Value;
             _queryString = new QueryString(options.Value);
             _propertyProvider = propertyProvider;
             _parameterParserFactory = parameterParserFactory;
-            _knownParameters = Enum.GetNames(typeof(QueryStringKnownParameter));
         }
 
         public QueryString Parse(Type type, IEnumerable<KeyValuePair<string, StringValues>> parameters)
@@ -43,7 +43,7 @@ namespace CoreApiDirect.Url.Parsing
         {
             string parameterName = parameter.Key.Trim();
 
-            if (_knownParameters.Contains(parameterName, StringComparer.OrdinalIgnoreCase))
+            if (_options.KnownQueryStringParameters.Contains(parameterName, StringComparer.OrdinalIgnoreCase))
             {
                 return;
             }

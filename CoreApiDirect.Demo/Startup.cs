@@ -39,6 +39,7 @@ namespace CoreApiDirect.Demo
                 options.RelatedDataLevel = 5;
                 options.MaxPageSize = 25;
                 options.PageSize = 15;
+                options.KnownQueryStringParameters.Add("culture");
             })
             .AddDbContext<AppDbContext>(options =>
             {

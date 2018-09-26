@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using CoreApiDirect.Response;
 
 namespace CoreApiDirect.Options
@@ -94,6 +95,11 @@ namespace CoreApiDirect.Options
         /// Gets or sets a value that indicates whether the search, that is performed through a URL query string parameter, is case sensitive.
         /// </summary>
         public bool CaseSensitiveSearch { get; set; } = DEFAULT_CASE_SENSITIVE_SEARCH;
+
+        /// <summary>
+        /// A list of known query string parameters, so that, if the query string validation is active, no errors will be caused.
+        /// </summary>
+        public List<string> KnownQueryStringParameters { get; set; } = new List<string>();
 
         private int _relatedDataLevel;
         private int _maxPageSize;
