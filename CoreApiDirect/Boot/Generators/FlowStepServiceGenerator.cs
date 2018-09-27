@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using CoreApiDirect.Base;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,8 +7,6 @@ namespace CoreApiDirect.Boot.Generators
 {
     internal class FlowStepServiceGenerator : ServiceGenerator
     {
-        private readonly List<Type> _specificImplementationTypes = new List<Type>();
-
         public FlowStepServiceGenerator(
             ITypeProvider typeProvider,
             Type helperGenericDefinition,
@@ -26,15 +23,7 @@ namespace CoreApiDirect.Boot.Generators
 
         private Type GetExistingImplementationType(Type helperType)
         {
-            var specificImplementationType = GetSpecificImplementationType(helperType);
-
-            if (specificImplementationType != null)
-            {
-                _specificImplementationTypes.Add(specificImplementationType);
-                return specificImplementationType;
-            }
-
-            return GetGenericImplementationType(helperType);
+            return GetSpecificImplementationType(helperType) ?? GetGenericImplementationType(helperType);
         }
 
         private Type GetSpecificImplementationType(Type helperType)
@@ -92,8 +81,8 @@ namespace CoreApiDirect.Boot.Generators
         private bool HasSubclass(Type genericImplementationType)
         {
             return (from subclassType in TypeProvider.Types
-                    where !_specificImplementationTypes.Contains(subclassType) &&
-                          subclassType.IsSubclassOfRawGeneric(genericImplementationType)
+                    where subclassType.IsSubclassOfRawGeneric(genericImplementationType) &&
+                          subclassType.IsGenericType
                     select subclassType).Any();
         }
 
