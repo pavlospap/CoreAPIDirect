@@ -88,6 +88,7 @@ namespace CoreApiDirect.Boot
                 .AddScoped<IPlainFilterBuilder, PlainFilterBuilder>()
                 .AddSingleton<IPropertyProvider, PropertyProvider>()
                 .AddTransient<IQueryFilterPropertyWalker, QueryFilterPropertyWalker>()
+                .AddTransient<IQueryFilterPropertyWalkerVisitor, QueryFilterPropertyWalkerVisitor>()
                 .AddScoped<IQueryStringParser, QueryStringParser>()
                 .AddScoped(typeof(IResponseBuilder), options.ResponseBuilderType ?? throw new InvalidOperationException("CoreApiDirect.Response.IResponseBuilder implementation is missing."))
                 .AddScoped<IRouteFilterBuilder, RouteFilterBuilder>()
