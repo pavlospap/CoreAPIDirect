@@ -40,7 +40,7 @@ namespace CoreApiDirect.Controllers
             TotalCount = totalCount;
             PageNumber = pageNumber;
             PageSize = pageSize;
-            TotalPages = (int)Math.Ceiling((decimal)(totalCount / pageSize));
+            TotalPages = (int)Math.Ceiling((decimal)totalCount / pageSize);
         }
 
         public static async Task<PagedList<TEntity>> CreateAsync(IQueryable<TEntity> query, QueryString queryString)

@@ -49,7 +49,7 @@ namespace CoreApiDirect.Controllers
             valuesDict[nameof(queryString.QueryParams.Sort).Camelize()] = string.Join(',', queryString.QueryParams.Sort.Select(p => p.Field + p.Direction.Encoded()));
             valuesDict[nameof(queryString.QueryParams.Filter).Camelize()] = _plainFilterBuilder.Build(queryString.QueryParams.Filter.ToArray());
 
-            return controller.Url.Action("Get", controller.ControllerContext.ActionDescriptor.ControllerName, values);
+            return controller.Url.Action("GetAsync", controller.ControllerContext.ActionDescriptor.ControllerName, values);
         }
     }
 }
