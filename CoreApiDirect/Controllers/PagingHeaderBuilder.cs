@@ -42,12 +42,16 @@ namespace CoreApiDirect.Controllers
             var values = new ExpandoObject();
             var valuesDict = (IDictionary<string, object>)values;
 
-            valuesDict[nameof(queryString.PageNumber).Camelize()] = pageNumber;
-            valuesDict[nameof(queryString.PageSize).Camelize()] = queryString.PageSize;
-            valuesDict[nameof(queryString.QueryParams.Search).Camelize()] = queryString.QueryParams.Search;
-            valuesDict[nameof(queryString.QueryParams.Fields).Camelize()] = string.Join(',', queryString.QueryParams.Fields);
-            valuesDict[nameof(queryString.QueryParams.Sort).Camelize()] = string.Join(',', queryString.QueryParams.Sort.Select(p => p.Field + p.Direction.Encoded()));
-            valuesDict[nameof(queryString.QueryParams.Filter).Camelize()] = _plainFilterBuilder.Build(queryString.QueryParams.Filter.ToArray());
+            valuesDict[nameof(QueryString.ValidateRoute).Camelize()] = queryString.ValidateRoute;
+            valuesDict[nameof(QueryString.ValidateQueryString).Camelize()] = queryString.ValidateQueryString;
+            valuesDict[nameof(QueryString.RelatedDataLevel).Camelize()] = queryString.RelatedDataLevel;
+            valuesDict[nameof(QueryString.PageNumber).Camelize()] = pageNumber;
+            valuesDict[nameof(QueryString.PageSize).Camelize()] = queryString.PageSize;
+            valuesDict[nameof(QueryString.CaseSensitiveSearch).Camelize()] = queryString.CaseSensitiveSearch;
+            valuesDict[nameof(QueryString.QueryParams.Search).Camelize()] = queryString.QueryParams.Search;
+            valuesDict[nameof(QueryString.QueryParams.Fields).Camelize()] = string.Join(',', queryString.QueryParams.Fields);
+            valuesDict[nameof(QueryString.QueryParams.Sort).Camelize()] = string.Join(',', queryString.QueryParams.Sort.Select(p => p.Field + p.Direction.Encoded()));
+            valuesDict[nameof(QueryString.QueryParams.Filter).Camelize()] = _plainFilterBuilder.Build(queryString.QueryParams.Filter.ToArray());
 
             return controller.Url.Action("GetAsync", controller.ControllerContext.ActionDescriptor.ControllerName, values);
         }
