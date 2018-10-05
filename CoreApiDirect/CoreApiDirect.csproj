@@ -5,12 +5,12 @@
     <Authors>Pavlos Papadopoulos</Authors>
     <Company></Company>
     <Product>CoreAPIDirect</Product>
-    <Description>REST API library for ASP.NET Core</Description>
+    <Description>REST API library for ASP.NET Core that provides CRUD implementation out of the box.</Description>
     <Copyright>Copyright © Pavlos Papadopoulos 2018</Copyright>
     <RootNamespace>CoreApiDirect</RootNamespace>
     <PackageId>CoreAPIDirect</PackageId>
     <PackageLicenseUrl>https://github.com/pavlospap/CoreAPIDirect/blob/master/LICENSE</PackageLicenseUrl>
-    <PackageTags>ASP.NET Core API REST</PackageTags>
+    <PackageTags>asp net core api rest http crud</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <LangVersion>latest</LangVersion>
