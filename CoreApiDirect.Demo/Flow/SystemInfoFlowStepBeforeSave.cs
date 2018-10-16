@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CoreApiDirect.Demo.Flow
 {
-    public class SystemInfoFlowStepBeforeSave : FlowStepBeforeSave<SystemInfo>
+    public class SystemInfoFlowStepBeforeSave : FlowStepBeforeSaveBase<SystemInfo>
     {
         public override async Task<IActionResult> ExecuteAsync(SystemInfo entity)
         {
