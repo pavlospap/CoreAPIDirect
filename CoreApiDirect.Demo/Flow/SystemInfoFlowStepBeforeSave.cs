@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using CoreApiDirect.Demo.Entities.Logging;
-using CoreApiDirect.Flow.Steps;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoreApiDirect.Demo.Flow
