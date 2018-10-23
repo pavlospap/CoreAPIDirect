@@ -15,7 +15,7 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <LangVersion>latest</LangVersion>
     <PackageProjectUrl>https://github.com/pavlospap/CoreAPIDirect</PackageProjectUrl>
-    <Version>1.0.4</Version>
+    <Version>1.0.5</Version>
     <PackageIconUrl>https://github.com/pavlospap/CoreAPIDirect/raw/master/logo.png</PackageIconUrl>
   </PropertyGroup>
 
