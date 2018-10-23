@@ -296,8 +296,8 @@ namespace CoreApiDirect.Tests.Url.Parsing
         [InlineData("http://api?filter=name" + DoubleEncoded.NOT_IN + "University of Pennsylvania" + DoubleEncoded.COMMA + "University of Minnesota", LogicalOperator.And, "name", ComparisonOperator.NotIn, "University of Pennsylvania,University of Minnesota")]
         [InlineData("http://api?filter=yearofestablishment" + DoubleEncoded.NULL, LogicalOperator.And, "yearofestablishment", ComparisonOperator.Null)]
         [InlineData("http://api?filter=yearofestablishment" + DoubleEncoded.NOT_NULL, LogicalOperator.And, "yearofestablishment", ComparisonOperator.NotNull)]
-        [InlineData("http://api?filter=yearofestablishment" + DoubleEncoded.LIKE + "best", LogicalOperator.And, "yearofestablishment", ComparisonOperator.Like, "best")]
-        [InlineData("http://api?filter=yearofestablishment" + DoubleEncoded.NOT_LIKE + "nice", LogicalOperator.And, "yearofestablishment", ComparisonOperator.NotLike, "nice")]
+        [InlineData("http://api?filter=name" + DoubleEncoded.LIKE + "University", LogicalOperator.And, "name", ComparisonOperator.Like, "University")]
+        [InlineData("http://api?filter=name" + DoubleEncoded.NOT_LIKE + "University", LogicalOperator.And, "name", ComparisonOperator.NotLike, "University")]
         public void Parse_ValidFilter_EqualToExpected(string url, LogicalOperator logicalOperator, string field, ComparisonOperator comparisonOperator, string value = null)
         {
             var queryString = _queryStringParser.Parse(typeof(SchoolOutDto), GetQuery(url));

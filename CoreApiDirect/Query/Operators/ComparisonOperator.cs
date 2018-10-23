@@ -8,22 +8,10 @@ namespace CoreApiDirect.Query.Operators
     public enum ComparisonOperator
     {
         /// <summary>
-        /// The field is equal to the filter value.
-        /// </summary>
-        [Encoded(Encoded.EQUAL)]
-        Equal,
-
-        /// <summary>
         /// The field is not equal to the filter value.
         /// </summary>
         [Encoded(Encoded.NOT_EQUAL)]
         NotEqual,
-
-        /// <summary>
-        /// The field is greater than the filter value.
-        /// </summary>
-        [Encoded(Encoded.GREATER)]
-        Greater,
 
         /// <summary>
         /// The field is greater or equal to the filter value.
@@ -32,16 +20,28 @@ namespace CoreApiDirect.Query.Operators
         GreaterOrEqual,
 
         /// <summary>
-        /// The field is less than the filter value.
-        /// </summary>
-        [Encoded(Encoded.LESS)]
-        Less,
-
-        /// <summary>
         /// The field is less or equal to the filter value.
         /// </summary>
         [Encoded(Encoded.LESS_OR_EQUAL)]
         LessOrEqual,
+
+        /// <summary>
+        /// The field is equal to the filter value.
+        /// </summary>
+        [Encoded(Encoded.EQUAL)]
+        Equal,
+
+        /// <summary>
+        /// The field is greater than the filter value.
+        /// </summary>
+        [Encoded(Encoded.GREATER)]
+        Greater,
+
+        /// <summary>
+        /// The field is less than the filter value.
+        /// </summary>
+        [Encoded(Encoded.LESS)]
+        Less,
 
         /// <summary>
         /// The field does not exist in a list of values.
