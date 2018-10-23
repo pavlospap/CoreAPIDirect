@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using CoreApiDirect.Base;
 using CoreApiDirect.Controllers;
 using CoreApiDirect.Tests.Controllers.Helpers;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -57,7 +58,7 @@ namespace CoreApiDirect.Tests.Controllers
                 ValueProvider = mockValueProvider.Object
             };
 
-            var binder = new KeyModelBinder();
+            var binder = new KeyModelBinder(new ListProvider());
             binder.BindModelAsync(modelBindingContext);
 
             return modelBindingContext.Result;

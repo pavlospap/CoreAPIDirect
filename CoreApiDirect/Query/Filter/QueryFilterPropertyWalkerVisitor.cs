@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -15,15 +16,18 @@ namespace CoreApiDirect.Query.Filter
     internal class QueryFilterPropertyWalkerVisitor : PropertyWalkerVisitor<Expression, QueryFilterWalkInfo>, IQueryFilterPropertyWalkerVisitor
     {
         private readonly IMethodProvider _methodProvider;
+        private readonly IListProvider _listProvider;
 
         private Expression _expression;
 
         public QueryFilterPropertyWalkerVisitor(
             IServiceProvider serviceProvider,
-            IMethodProvider methodProvider)
+            IMethodProvider methodProvider,
+            IListProvider listProvider)
             : base(serviceProvider)
         {
             _methodProvider = methodProvider;
+            _listProvider = listProvider;
         }
 
         public override Expression Output(QueryFilterWalkInfo walkInfo)
@@ -72,14 +76,14 @@ namespace CoreApiDirect.Query.Filter
 
         private Expression GetPropertyComparisonExpression(Expression member, QueryLogicalFilter logicalFilter)
         {
-            var value = logicalFilter.Filter.Values.FirstOrDefault();
+            object value = ConvertValue(member.Type, logicalFilter.Filter.Values.FirstOrDefault());
 
             switch (logicalFilter.Filter.Operator)
             {
                 case ComparisonOperator.Equal:
-                    return Expression.Equal(member, Expression.Constant(value));
+                    return Expression.Equal(member, Expression.Convert(Expression.Constant(value), member.Type));
                 case ComparisonOperator.NotEqual:
-                    return Expression.NotEqual(member, Expression.Constant(value));
+                    return Expression.NotEqual(member, Expression.Convert(Expression.Constant(value), member.Type));
                 case ComparisonOperator.Greater:
                     return Expression.GreaterThan(member, Expression.Convert(Expression.Constant(value), member.Type));
                 case ComparisonOperator.GreaterOrEqual:
@@ -105,20 +109,46 @@ namespace CoreApiDirect.Query.Filter
             throw new NotImplementedException(nameof(ComparisonOperator));
         }
 
+        private object ConvertValue(Type memberType, string value)
+        {
+            if (Nullable.GetUnderlyingType(memberType) != null)
+            {
+                var getNullableValueMethod = GetType().GetMethod(nameof(GetNullableValue))
+                    .MakeGenericMethod(memberType.GenericTypeArguments[0]);
+                return getNullableValueMethod.Invoke(this, new object[] { value });
+            }
+            else
+            {
+                return Convert.ChangeType(value, memberType);
+            }
+        }
+
+        public T? GetNullableValue<T>(string value)
+            where T : struct
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return null;
+            }
+
+            var converter = TypeDescriptor.GetConverter(typeof(T?));
+
+            return (T?)converter.ConvertFrom(value);
+        }
+
         private Expression BuildInExpression(Expression member, QueryLogicalFilter logicalFilter, bool isIn)
         {
-            var list = logicalFilter.Filter.Values.ToList();
-            var listExpression = Expression.Constant(list);
-            var containsMethod = typeof(List<object>).GetMethod("Contains", new Type[] { typeof(object) });
-            var convertedPropertyExpression = Expression.Convert(member, list.GetType().BaseGenericType().GetGenericArguments()[0]);
+            var typedList = _listProvider.GetTypedList(logicalFilter.Filter.Values, member.Type, typeof(List<>));
+            var listExpression = Expression.Constant(typedList);
+            var containsMethod = typedList.GetType().GetMethod("Contains", new Type[] { member.Type });
 
-            return Expression.Equal(Expression.Call(listExpression, containsMethod, convertedPropertyExpression), Expression.Constant(isIn));
+            return Expression.Equal(Expression.Call(listExpression, containsMethod, member), Expression.Constant(isIn));
         }
 
         private Expression BuildLikeExpression(Expression member, object value, bool isLike)
         {
             var valueExpression = Expression.Constant(value);
-            var containsMethod = typeof(string).GetMethod("Contains", new Type[] { typeof(String) });
+            var containsMethod = typeof(string).GetMethod("Contains", new Type[] { typeof(string) });
 
             return Expression.Equal(Expression.Call(member, containsMethod, valueExpression), Expression.Constant(isLike));
         }

@@ -21,6 +21,6 @@ namespace CoreApiDirect.Query.Parameters
         /// <summary>
         /// Gets or sets an enumerable of filter values.
         /// </summary>
-        public IEnumerable<object> Values { get; set; } = new List<object>();
+        public IEnumerable<string> Values { get; set; } = new List<string>();
     }
 }

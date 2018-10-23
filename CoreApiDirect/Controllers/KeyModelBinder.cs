@@ -1,13 +1,19 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Linq;
 using System.Threading.Tasks;
+using CoreApiDirect.Base;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace CoreApiDirect.Controllers
 {
     internal class KeyModelBinder : IModelBinder
     {
+        private readonly IListProvider _listProvider;
+
+        public KeyModelBinder(IListProvider listProvider)
+        {
+            _listProvider = listProvider;
+        }
+
         public Task BindModelAsync(ModelBindingContext bindingContext)
         {
             if (!bindingContext.ModelMetadata.IsEnumerableType)
@@ -26,38 +32,13 @@ namespace CoreApiDirect.Controllers
 
             var type = bindingContext.ModelType.GenericTypeArguments[0];
 
-            var typedArray = GetTypedArray(routeParam, type);
-            var typedList = GetTypedList(type, typedArray);
+            var typedList = _listProvider.GetTypedList(
+                routeParam.Split(',', StringSplitOptions.RemoveEmptyEntries), type, typeof(KeyList<>));
 
             bindingContext.Model = typedList;
             bindingContext.Result = ModelBindingResult.Success(bindingContext.Model);
 
             return Task.CompletedTask;
-        }
-
-        private Array GetTypedArray(string routeParam, Type type)
-        {
-            var converter = TypeDescriptor.GetConverter(type);
-
-            var ids = routeParam.Split(',', StringSplitOptions.RemoveEmptyEntries)
-                .Select(p => converter.ConvertFromString(p.Trim()))
-                .ToArray();
-
-            var typedArray = Array.CreateInstance(type, ids.Length);
-            ids.CopyTo(typedArray, 0);
-
-            return typedArray;
-        }
-
-        private object GetTypedList(Type type, Array typedArray)
-        {
-            var listType = typeof(KeyList<>).MakeGenericType(new Type[] { type });
-            var typedList = Activator.CreateInstance(listType);
-
-            var addRangeMethod = listType.GetMethod("AddRange");
-            addRangeMethod.Invoke(typedList, new object[] { typedArray });
-
-            return typedList;
         }
     }
 }

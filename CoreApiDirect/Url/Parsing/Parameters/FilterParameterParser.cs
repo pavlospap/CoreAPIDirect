@@ -121,7 +121,7 @@ namespace CoreApiDirect.Url.Parsing.Parameters
             return true;
         }
 
-        private IEnumerable<object> GetValues(ComparisonOperator comparisonOperator, string comparisonValue)
+        private IEnumerable<string> GetValues(ComparisonOperator comparisonOperator, string comparisonValue)
         {
             if (IsNullOrNotNullCheck(comparisonOperator))
             {

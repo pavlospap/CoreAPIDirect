@@ -81,6 +81,7 @@ namespace CoreApiDirect.Boot
                 .AddScoped<IFilterParameterParser, FilterParameterParser>()
                 .AddSingleton<IForeignKeysResolver, ForeignKeysResolver>()
                 .AddScoped<IIntegerParameterParser, IntegerParameterParser>()
+                .AddSingleton<IListProvider, ListProvider>()
                 .AddSingleton<IMethodProvider, MethodProvider>()
                 .AddSingleton<IModelStateResolver, ModelStateResolver>()
                 .AddScoped<IPagingHeaderBuilder, PagingHeaderBuilder>()

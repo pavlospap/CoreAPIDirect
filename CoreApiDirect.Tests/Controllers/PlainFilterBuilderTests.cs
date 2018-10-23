@@ -21,7 +21,7 @@ namespace CoreApiDirect.Tests.Controllers
                     {
                         Field = "name",
                         Operator = ComparisonOperator.In,
-                        Values= new List<object>
+                        Values= new List<string>
                         {
                             "University of Pennsylvania",
                             "University of Minnesota"
@@ -35,7 +35,7 @@ namespace CoreApiDirect.Tests.Controllers
                     {
                         Field = "yearofestablishment",
                         Operator = ComparisonOperator.Equal,
-                        Values = new List<object> { 1891 }
+                        Values = new List<string> { "1891" }
                     }
                 }
             };

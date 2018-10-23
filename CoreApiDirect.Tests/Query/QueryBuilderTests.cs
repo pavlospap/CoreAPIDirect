@@ -129,7 +129,7 @@ namespace CoreApiDirect.Tests.Query
                             Filter = new QueryComparisonFilter {
                                 Field = "yearofestablishment",
                                 Operator = ComparisonOperator.Greater,
-                                Values = new List<object> { 1739 }
+                                Values = new List<string> { "1739" }
                             }
                         },
                         new QueryLogicalFilter
@@ -138,7 +138,7 @@ namespace CoreApiDirect.Tests.Query
                             Filter = new QueryComparisonFilter {
                                 Field = "yearofestablishment",
                                 Operator = ComparisonOperator.Less,
-                                Values = new List<object> { 1852 }
+                                Values = new List<string> { "1852" }
                             }
                         },
                         new QueryLogicalFilter
@@ -147,7 +147,7 @@ namespace CoreApiDirect.Tests.Query
                             Filter = new QueryComparisonFilter {
                                 Field = "lessons.books.name",
                                 Operator = ComparisonOperator.Equal,
-                                Values = new List<object> { "The art of computer programming" }
+                                Values = new List<string> { "The art of computer programming" }
                             }
                         },
                         new QueryLogicalFilter
@@ -156,7 +156,7 @@ namespace CoreApiDirect.Tests.Query
                             Filter = new QueryComparisonFilter {
                                 Field = "lessons!.weekhours",
                                 Operator = ComparisonOperator.In,
-                                Values = new List<object> { 2, 3, 4, 5 }
+                                Values = new List<string> { "2", "3", "4", "5" }
                             }
                         },
                         new QueryLogicalFilter
@@ -165,7 +165,7 @@ namespace CoreApiDirect.Tests.Query
                             Filter = new QueryComparisonFilter {
                                 Field = "lessons.books!.name",
                                 Operator = ComparisonOperator.Like,
-                                Values = new List<object> { "The" }
+                                Values = new List<string> { "The" }
                             }
                         },
                         new QueryLogicalFilter
@@ -174,7 +174,7 @@ namespace CoreApiDirect.Tests.Query
                             Filter = new QueryComparisonFilter {
                                 Field = "lessons.books!.name",
                                 Operator = ComparisonOperator.NotLike,
-                                Values = new List<object> { "math" }
+                                Values = new List<string> { "math" }
                             }
                         },
                         new QueryLogicalFilter
@@ -183,7 +183,7 @@ namespace CoreApiDirect.Tests.Query
                             Filter = new QueryComparisonFilter {
                                 Field = "students!.dateofbirth",
                                 Operator = ComparisonOperator.GreaterOrEqual,
-                                Values = new List<object> {  new DateTime(1996, 1, 1) }
+                                Values = new List<string> {  new DateTime(1996, 1, 1).ToLongDateString() }
                             }
                         },
                         new QueryLogicalFilter
@@ -192,7 +192,7 @@ namespace CoreApiDirect.Tests.Query
                             Filter = new QueryComparisonFilter {
                                 Field = "students!.dateofbirth",
                                 Operator = ComparisonOperator.LessOrEqual,
-                                Values = new List<object> {  new DateTime(2000, 12, 31) }
+                                Values = new List<string> {  new DateTime(2000, 12, 31).ToLongDateString() }
                             }
                         },
                         new QueryLogicalFilter
@@ -217,7 +217,7 @@ namespace CoreApiDirect.Tests.Query
                             Filter = new QueryComparisonFilter {
                                 Field = "students.contactinfo.phones!.number",
                                 Operator = ComparisonOperator.NotEqual,
-                                Values = new List<object> { "608-555-0122" }
+                                Values = new List<string> { "608-555-0122" }
                             }
                         },
                         new QueryLogicalFilter
@@ -226,7 +226,7 @@ namespace CoreApiDirect.Tests.Query
                             Filter = new QueryComparisonFilter {
                                 Field = "students.contactinfo.phones!.number",
                                 Operator = ComparisonOperator.NotIn,
-                                Values = new List<object> { "405-555-0176", "302-555-0147" }
+                                Values = new List<string> { "405-555-0176", "302-555-0147" }
                             }
                         }
                     },
@@ -298,6 +298,7 @@ namespace CoreApiDirect.Tests.Query
             services.AddTransient<IQueryFilterPropertyWalkerVisitor, QueryFilterPropertyWalkerVisitor>();
             services.AddSingleton<IPropertyProvider, PropertyProvider>();
             services.AddSingleton<IMethodProvider, MethodProvider>();
+            services.AddSingleton<IListProvider, ListProvider>();
 
             return services;
         }
